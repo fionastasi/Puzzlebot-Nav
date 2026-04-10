@@ -2,9 +2,9 @@
 # Simulation, Description, and Autonomous Navigation Workspace
 
 ## Team Members
-- Member 1 – Student ID – Role  
-- Member 2 – Student ID – Role  
-- Member 3 – Student ID – Role  
+- Alejandro Araiza Escamilla – A00836348 – Project Manager  
+- Daniel De Regules Gamboa – A0174967 – CTO 
+- Fiona Stasi Fernández – A01733692 – CTO  
 
 ------------------------------------------------------------
 1. Project Overview
