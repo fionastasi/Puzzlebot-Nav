@@ -1,0 +1,9 @@
+<launch>
+    <arg name="rviz" default="false" />
+    <arg name="gazebo" default="false" />
+    <arg name= "joint_gui" default="false" />
+    <arg name=use_sim_time default="false" />
+
+    <let name= "urdf_path" value="$(find-pkg-share puzzlebot_description)/urdf/puzzlebot.urdf" /> 
+    <let name= "rviz_config_path" value="$(find-pkg-share puzzlebot_description)/rviz/puzzlebot.rviz" />
+    <let name= "gazebo_path" value="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch" />
