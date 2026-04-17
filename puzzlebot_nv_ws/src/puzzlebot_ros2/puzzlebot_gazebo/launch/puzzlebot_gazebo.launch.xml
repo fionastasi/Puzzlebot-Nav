@@ -1,27 +1,31 @@
 <launch>
-	<arg name="world" default="$(find-pkg-share puzzlebot_gazebo)/worlds/maze.world"/>
-	<arg name="use_sim_time" default="true"/>
-	<arg name="rviz" default="false"/>
-	<arg name="spawn_robot" default="true"/>
+	<let name= "world" value="$(find-pkg-share puzzlebot_gazebo)/worlds/maze.world"/>
+	<let name= "puzzlebot_description_path" value="$(find-pkg-share puzzlebot_description)/launch/puzzlebot_description.launch.xml" />
+	<let name= "gazebo_bridge_path" value="$(find-pkg-share puzzlebot_gazebo)/config/gazebo_bridge.yaml" />
+	<let name= "x_pose" value="1.35"/>
+	<let name= "y_pose" value="0.0"/>
+	<let name= "use_sim_time" value="true"/>
+	<arg name="headless" default="false"/> // si hay problemas con el performance al ejecutar el mundo, cambiar a true
 
-	<include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.xml">
+	<include if="$(not $(var headless))" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.xml">
 		<arg name="gz_args" value="-r $(var world)"/>
 	</include>
 
-	<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
-		<param name="config_file" value="$(find-pkg-share puzzlebot_gazebo)/config/gazebo_bridge.yaml"/>
-	</node>
+	<!--
+	<include if="$(var headless)" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.xml">
+		<arg name="gz_args" value="-r -s $(var world)"/> // el argumento -s hace que Gazebo se ejecute sin interfaz gráfica, lo que puede mejorar el rendimiento en sistemas con recursos limitados (headless mode).
+	</include>
+	-->
 
-	<include file="$(find-pkg-share puzzlebot_description)/launch/puzzlebot_description.launch.xml">
+	<include file="$(var puzzlebot_description_path)">
 		<arg name="use_sim_time" value="$(var use_sim_time)"/>
-		<arg name="rviz" value="$(var rviz)"/>
+		<arg name="rviz" value="false"/>
 		<arg name="gazebo" value="false"/>
 	</include>
 
-	<node
-		pkg="ros_gz_sim"
-		exec="create"
-		output="screen"
-		if="$(var spawn_robot)"
-		args="-name puzzlebot -topic robot_description"/>
+	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.01 -Y 3.1416"/> // "Y" es para rotar en Y (gama)
+
+	<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
+		<param name="config_file" value="$(var gazebo_bridge_path)"/>
+	</node>
 </launch>
