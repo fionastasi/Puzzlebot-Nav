@@ -1,21 +1,18 @@
 <launch>
-  <arg name="world" default="$(find-pkg-share puzzlebot_gazebo)/worlds/maze.world"/>
-  <arg name="map" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml"/>
+  <arg name="map_path" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml"/>
   <arg name="use_sim_time" default="true"/>
-  <arg name="rviz" default="true"/>
-  <arg name="spawn_robot" default="true"/>
   <arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml"/>
+  <arg name="headless" default="true"/> //true for MV for better performance 
 
   <include file="$(find-pkg-share puzzlebot_gazebo)/launch/puzzlebot_gazebo.launch.xml">
-    <arg name="world" value="$(var world)"/>
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="rviz" value="$(var rviz)"/>
-    <arg name="spawn_robot" value="$(var spawn_robot)"/>
+    <arg name="headless" value="$(var headless)"/>
   </include>
 
-  <include file="$(find-pkg-share nav2_bringup)/launch/navigation_launch.py">
+  <include file="$(find-pkg-share puzzlebot_navigation2)/launch/nav2_core.launch.xml">
+    <arg name="map_path" value="$(var map_path)"/>
+    <arg name="nav2_params_file" value="$(var nav2_params_file)"/>
+    <arg name="rviz_config_path" value="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz"/>
     <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="params_file" value="$(var nav2_params_file)"/>
-    <arg name="map" value="$(var map)"/>
   </include>
+
 </launch>
