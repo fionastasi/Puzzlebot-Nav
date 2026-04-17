@@ -180,4 +180,4 @@ ros2 launch puzzlebot_navigation2 nav2.launch.xml
 
 - Each package may include its own README.md for clarity.  
 - The workspace organization is clean and maintainable.  
-- If the world is modified, regenerate the map using SLAM.  
+- If the world is modified, regenerate the map using SLAM.
