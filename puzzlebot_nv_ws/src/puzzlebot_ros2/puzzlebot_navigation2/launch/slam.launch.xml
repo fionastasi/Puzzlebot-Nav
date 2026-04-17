@@ -1,0 +1,12 @@
+<launch>
+    <arg name="use_sim_time" default="true" />
+    <arg name="headless" default="false" /> // change to "true" for different performance
+
+    <include file="$(find puzzlebot_navigation2)/launch/puzzlebot_gazebo.launch.xml">
+        <arg name="headless" value="$(var headless)"/>
+    </include> 
+
+    <include file="$(find puzzlebot_navigation2)/launch/slam_core.launch.xml">
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    </include>
+</launch>
