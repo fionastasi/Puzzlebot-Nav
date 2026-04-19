@@ -5,9 +5,9 @@
 	<let name= "x_pose" value="1.35"/>
 	<let name= "y_pose" value="0.0"/>
 	<let name= "use_sim_time" value="true"/>
-	<arg name="headless" default="false"/> // si hay problemas con el performance al ejecutar el mundo, cambiar a true
+	<arg name="headless" default="false"/> 
 
-	<include if="$(not $(var headless))" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.xml">
+	<include if="$(not $(var headless))" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
 		<arg name="gz_args" value="-r $(var world)"/>
 	</include>
 
@@ -23,7 +23,7 @@
 		<arg name="gazebo" value="false"/>
 	</include>
 
-	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.01 -Y 3.1416"/> // "Y" es para rotar en Y (gama)
+	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.01 -Y 3.1416"/> 
 
 	<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
 		<param name="config_file" value="$(var gazebo_bridge_path)"/>
