@@ -26,13 +26,13 @@ Robot description package for Puzzlebot (URDF/Xacro, meshes, TF tree, and RViz p
 
 ## Folder guides
 
-- `urdf/README.md`
-- `launch/README.md`
-- `rviz/README.md`
-- `meshes/README.md`
-- `XACRO_OVERVIEW.md`
-- `TF_FRAMES.md`
-- `TROUBLESHOOTING.md`
+- [urdf/README.md](urdf/README.md)
+- [launch/README.md](launch/README.md)
+- [rviz/README.md](rviz/README.md)
+- [meshes/README.md](meshes/README.md)
+- [XACRO_OVERVIEW.md](XACRO_OVERVIEW.md)
+- [TF_FRAMES.md](TF_FRAMES.md)
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## How to run
 

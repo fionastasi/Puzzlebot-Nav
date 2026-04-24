@@ -27,12 +27,12 @@ Navigation package for Puzzlebot with SLAM Toolbox and Nav2.
 
 ## Folder guides
 
-- `launch/README.md`
-- `config/README.md`
-- `config/PARAMETERS.md`
-- `maps/README.md`
-- `rviz/README.md`
-- `TROUBLESHOOTING.md`
+- [launch/README.md](launch/README.md)
+- [config/README.md](config/README.md)
+- [config/PARAMETERS.md](config/PARAMETERS.md)
+- [maps/README.md](maps/README.md)
+- [rviz/README.md](rviz/README.md)
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## How to run
 

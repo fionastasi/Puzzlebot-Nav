@@ -21,11 +21,11 @@ Simulation package for Puzzlebot in Gazebo (world launch, robot spawn, ROS<->Gaz
 
 ## Folder guides
 
-- `config/README.md`
-- `config/PARAMETERS.md`
-- `launch/README.md`
-- `worlds/README.md`
-- `TROUBLESHOOTING.md`
+- [config/README.md](config/README.md)
+- [config/PARAMETERS.md](config/PARAMETERS.md)
+- [launch/README.md](launch/README.md)
+- [worlds/README.md](worlds/README.md)
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## How to run
 
