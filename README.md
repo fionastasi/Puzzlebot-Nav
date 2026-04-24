@@ -1,183 +1,65 @@
-# Puzzlebot ROS2 – Final Project  
-# Simulation, Description, and Autonomous Navigation Workspace
+# Puzzlebot ROS2 – Final Project
 
-## Team Members
-- Alejandro Araiza Escamilla – A00836348  
-- Daniel De Regules Gamboa – A0174967 
-- Fiona Stasi Fernández – A01733692   
+## Overview
 
-------------------------------------------------------------
-1. Project Overview
-------------------------------------------------------------
+This repository contains the full ROS 2 workspace used for the Puzzlebot project. It brings together the robot model, the simulation environment, and the navigation stack needed to build, test, and run Puzzlebot in a consistent way.
 
-This repository contains all components required to run a Puzzlebot robot in **ROS 2 Humble**, organized into three main packages:
+The workspace is organized so each part of the system stays focused: `puzzlebot_description` defines the robot, `puzzlebot_gazebo` runs the simulation, and `puzzlebot_navigation2` handles SLAM and autonomous navigation. Together, they support the full workflow from visualization and simulation to map creation and goal-based navigation.
 
-- puzzlebot_description → 3D model, URDF/Xacro, frames, sensors, RViz config.  
-- puzzlebot_gazebo → Simulation environment, world file, robot spawning, Gazebo bridge.  
-- puzzlebot_navigation2 → SLAM, Nav2, maps, YAML configs, RViz profiles.
+ROS 2 Humble workspace for the Puzzlebot robot, split into three packages:
 
-This structure is modular, maintainable, and scalable for future development.
+- `puzzlebot_description`: robot model, URDF/Xacro, and visualization.
+- `puzzlebot_gazebo`: simulation world, spawning, and Gazebo bridge.
+- `puzzlebot_navigation2`: SLAM, Nav2, maps, and navigation config.
 
-------------------------------------------------------------
-2. Workspace Structure
-------------------------------------------------------------
+## Quick Links
 
-puzzlebot_ws/
+- [puzzlebot_description README](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_description/README.md)
+- [puzzlebot_gazebo README](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_gazebo/README.md)
+- [puzzlebot_navigation2 README](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_navigation2/README.md)
+- [Navigation parameters guide](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_navigation2/config/PARAMETERS.md)
+- [Nav2 parameters file](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_navigation2/config/nav2_params.yaml)
+- [SLAM parameters file](puzzlebot_nv_ws/src/puzzlebot_ros2/puzzlebot_navigation2/config/slam_toolbox.yaml)
+
+## Workspace Structure
+
+```text
+puzzlebot_nv_ws/
 └── src/
     └── puzzlebot_ros2/
         ├── puzzlebot_description/
         ├── puzzlebot_gazebo/
-        ├── puzzlebot_navigation2/
-        └── README.md
+        └── puzzlebot_navigation2/
+```
 
-------------------------------------------------------------
-3. Requirements
-------------------------------------------------------------
+## Requirements
 
-Software:
-- Ubuntu 22.04  
-- ROS 2 Humble  
-- Gazebo Classic (gz11)  
-- gazebo_ros_pkgs  
-- SLAM Toolbox  
-- Nav2  
-- RViz2  
-- Colcon  
-- python3-numpy  
-- python3-transforms3d  
+- Ubuntu 22.04
+- ROS 2 Humble
+- Gazebo Classic (gz11)
+- SLAM Toolbox
+- Nav2
+- RViz2
 
-Clone and build:
-cd ~/puzzlebot_ws/src  
-git clone <repo>  
-cd ~/puzzlebot_ws  
-colcon build  
-source install/setup.bash  
+## Basic Setup
 
-------------------------------------------------------------
-4. Package: puzzlebot_description
-------------------------------------------------------------
+```bash
+cd ~/puzzlebot_nv_ws/src
+git clone <repo>
+cd ~/puzzlebot_nv_ws
+colcon build
+source install/setup.bash
+```
 
-This package contains the full robot description, including URDF/Xacro files, frames, links, sensors, meshes, and RViz visualization.
+## Run Flow
 
-Structure:
+1. Robot description: `ros2 launch puzzlebot_description puzzlebot_description.launch.xml`
+2. Simulation: `ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml`
+3. SLAM: `ros2 launch puzzlebot_navigation2 slam.launch.xml`
+4. Navigation: `ros2 launch puzzlebot_navigation2 nav2.launch.xml`
 
-puzzlebot_description/
-├── launch/
-│   └── puzzlebot_description.launch.xml
-├── meshes/
-│   ├── base/
-│   ├── wheels/
-│   ├── sensors/
-│   └── misc/
-├── rviz/
-│   └── puzzlebot_description.rviz
-└── urdf/
-    ├── robot_base.xacro
-    ├── wheels.xacro
-    ├── sensors.xacro
-    ├── macros.xacro
-    └── puzzlebot.urdf.xacro
+## Notes
 
-Run robot description:
-ros2 launch puzzlebot_description puzzlebot_description.launch.xml
-
-------------------------------------------------------------
-5. Package: puzzlebot_gazebo
-------------------------------------------------------------
-
-This package is responsible for the robot simulation, including the world, bridge configuration, and launch files.
-
-Structure:
-
-puzzlebot_gazebo/
-├── config/
-│   └── gazebo_bridge.yaml
-├── launch/
-│   └── puzzlebot_gazebo.launch.xml
-└── worlds/
-    └── maze.world
-
-Run simulation:
-ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml
-
-------------------------------------------------------------
-6. Package: puzzlebot_navigation2
-------------------------------------------------------------
-
-This package integrates SLAM, navigation, RViz profiles, and map management.
-
-Structure:
-
-puzzlebot_navigation2/
-├── config/
-│   ├── nav2_params.yaml
-│   └── slam_toolbox.yaml
-├── launch/
-│   ├── slam.launch.xml
-│   └── nav2.launch.xml
-├── maps/
-│   ├── map_maze.yaml
-│   └── map_maze.pgm
-├── rviz/
-│   ├── slam.rviz
-│   └── nav2.rviz
-└── scripts/
-    ├── set_initial_pose.py
-    └── send_goal.py
-
-------------------------------------------------------------
-7. SLAM Mode (Map Creation)
-------------------------------------------------------------
-
-Start SLAM:
-ros2 launch puzzlebot_navigation2 slam.launch.xml
-
-SLAM RViz profile:
-rviz2 -d <path>/rviz/slam.rviz
-
-------------------------------------------------------------
-8. Navigation Mode (Using Generated Map)
-------------------------------------------------------------
-
-Start Nav2:
-ros2 launch puzzlebot_navigation2 nav2.launch.xml
-
-Navigation RViz profile:
-rviz2 -d <path>/rviz/nav2.rviz
-
-------------------------------------------------------------
-9. Tool Versions
-------------------------------------------------------------
-
-Ubuntu: 22.04  
-ROS 2: Humble  
-Gazebo Classic: 11  
-SLAM Toolbox: Humble version  
-Nav2: Humble version  
-RViz2: Included with Humble  
-Python: 3.10  
-Colcon: Latest  
-
-------------------------------------------------------------
-10. Recommended Workflow
-------------------------------------------------------------
-
-1. Load Robot Description  
-ros2 launch puzzlebot_description puzzlebot_description.launch.xml
-
-2. Run Simulation  
-ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml
-
-3. SLAM Mode  
-ros2 launch puzzlebot_navigation2 slam.launch.xml
-
-4. Navigation Mode  
-ros2 launch puzzlebot_navigation2 nav2.launch.xml
-
-------------------------------------------------------------
-11. Final Notes
-------------------------------------------------------------
-
-- Each package may include its own README.md for clarity.  
-- The workspace organization is clean and maintainable.  
-- If the world is modified, regenerate the map using SLAM.
+- Package-level details, snippets, and parameter explanations live in each package README.
+- Use the navigation parameter guide for tuning AMCL, SLAM, costmaps, and NavFn planner settings.
+- If the map or world changes, regenerate the map with SLAM before running Nav2.
