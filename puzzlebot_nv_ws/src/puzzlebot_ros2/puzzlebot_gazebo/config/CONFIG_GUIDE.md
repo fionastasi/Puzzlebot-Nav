@@ -17,3 +17,4 @@ Without these bridge mappings, ROS 2 and Gazebo run as separate systems and do n
 
 - ROS to Gazebo: command topics such as cmd_vel.
 - Gazebo to ROS: clock, odometry, TF, joint states, and laser scan.
+

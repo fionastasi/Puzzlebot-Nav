@@ -17,19 +17,19 @@ Robot description package for Puzzlebot (URDF/Xacro, meshes, TF tree, and RViz p
 - `XACRO_OVERVIEW.md`: xacro architecture, composition flow, conventions, and references.
 - `TF_FRAMES.md`: explanation of map/odom/base_footprint/base_link and frame conventions.
 - `TROUBLESHOOTING.md`: common issues, prefix/frame impacts, and safe change workflow.
-- `urdf/README.md`: component-by-component guide for all xacro/URDF files in this folder.
-- `launch/README.md`: launch behavior, arguments, and usage notes.
-- `rviz/README.md`: RViz profile purpose and workflow usage.
-- `meshes/README.md`: mesh assets and how they are used.
+- `urdf/URDF_GUIDE.md`: component-by-component guide for all xacro/URDF files in this folder.
+- `launch/LAUNCH_GUIDE.md`: launch behavior, arguments, and usage notes.
+- `rviz/RVIZ_GUIDE.md`: RViz profile purpose and workflow usage.
+- `meshes/MESHES_GUIDE.md`: mesh assets and how they are used.
 - `launch/puzzlebot_description.launch.xml`: launch entry point.
 - `rviz/puzzlebot_description.rviz`: RViz profile.
 
 ## Folder guides
 
-- [urdf/README.md](urdf/README.md)
-- [launch/README.md](launch/README.md)
-- [rviz/README.md](rviz/README.md)
-- [meshes/README.md](meshes/README.md)
+- [urdf/URDF_GUIDE.md](urdf/URDF_GUIDE.md)
+- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
+- [rviz/RVIZ_GUIDE.md](rviz/RVIZ_GUIDE.md)
+- [meshes/MESHES_GUIDE.md](meshes/MESHES_GUIDE.md)
 - [XACRO_OVERVIEW.md](XACRO_OVERVIEW.md)
 - [TF_FRAMES.md](TF_FRAMES.md)
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
@@ -84,3 +84,4 @@ ros2 launch puzzlebot_description puzzlebot_description.launch.xml rviz:=true jo
 
 - If TF appears static or delayed in simulation, set `use_sim_time:=true`.
 - If visualization is heavy for your machine, keep `rviz:=false` in this launch and open RViz only from nav/sim workflows.
+

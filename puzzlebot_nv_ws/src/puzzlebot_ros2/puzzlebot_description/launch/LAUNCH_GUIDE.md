@@ -22,5 +22,6 @@ This folder contains entry launch files for the robot description stack.
 
 ## Related docs
 
-- ../urdf/README.md
+- ../urdf/URDF_GUIDE.md
 - ../XACRO_OVERVIEW.md
+

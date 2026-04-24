@@ -20,3 +20,4 @@ map_maze.yaml points to my_map.pgm and defines:
 ## Why this matters
 
 Incorrect map metadata (origin, resolution, thresholds) can cause localization offsets, poor planning, or inconsistent obstacle interpretation.
+

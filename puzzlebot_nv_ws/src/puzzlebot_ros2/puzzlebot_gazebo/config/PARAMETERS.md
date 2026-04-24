@@ -157,3 +157,4 @@ If a topic exists but has no data, the common causes are:
 - wrong topic name on one side,
 - wrong message type mapping,
 - wrong direction.
+

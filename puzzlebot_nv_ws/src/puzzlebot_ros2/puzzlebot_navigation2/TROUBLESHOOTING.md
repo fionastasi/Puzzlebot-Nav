@@ -136,7 +136,8 @@ The Nav2 stack is similar in both environments, but data sources and timing diff
 ## Related docs
 
 - config/PARAMETERS.md
-- config/README.md
-- launch/README.md
-- maps/README.md
-- rviz/README.md
+- config/CONFIG_GUIDE.md
+- launch/LAUNCH_GUIDE.md
+- maps/MAPS_GUIDE.md
+- rviz/RVIZ_GUIDE.md
+

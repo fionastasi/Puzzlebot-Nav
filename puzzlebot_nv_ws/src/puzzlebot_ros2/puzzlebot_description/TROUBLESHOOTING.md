@@ -127,4 +127,5 @@ The description package itself usually needs few changes between simulation and 
 
 - XACRO_OVERVIEW.md
 - TF_FRAMES.md
-- urdf/README.md
+- urdf/URDF_GUIDE.md
+

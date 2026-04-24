@@ -15,16 +15,16 @@ Simulation package for Puzzlebot in Gazebo (world launch, robot spawn, ROS<->Gaz
 - `config/gazebo_bridge.yaml`: bridge topic mappings.
 - `config/PARAMETERS.md`: detailed explanation of bridge parameters, topic origins, and directions.
 - `TROUBLESHOOTING.md`: common simulation/bridge failures and impact of prefix/value changes.
-- `config/README.md`: overview of bridge config files and data flow.
-- `launch/README.md`: launch orchestration and argument behavior.
-- `worlds/README.md`: simulation world structure and purpose.
+- `config/CONFIG_GUIDE.md`: overview of bridge config files and data flow.
+- `launch/LAUNCH_GUIDE.md`: launch orchestration and argument behavior.
+- `worlds/WORLDS_GUIDE.md`: simulation world structure and purpose.
 
 ## Folder guides
 
-- [config/README.md](config/README.md)
+- [config/CONFIG_GUIDE.md](config/CONFIG_GUIDE.md)
 - [config/PARAMETERS.md](config/PARAMETERS.md)
-- [launch/README.md](launch/README.md)
-- [worlds/README.md](worlds/README.md)
+- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
+- [worlds/WORLDS_GUIDE.md](worlds/WORLDS_GUIDE.md)
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## How to run
@@ -93,3 +93,4 @@ ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml headless:=true
 - The launch file includes a commented headless Gazebo block that uses `-s` for server-only mode.
 - That mode can improve performance on low-resource systems because it avoids the GUI.
 - In practice, use `headless:=true` when you want a lighter simulation run.
+

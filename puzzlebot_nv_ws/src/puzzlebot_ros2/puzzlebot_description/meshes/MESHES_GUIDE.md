@@ -19,3 +19,4 @@ This folder stores STL meshes used by the robot visuals.
 ## Design note
 
 Collision geometry can differ from visual mesh for simpler physics and better simulation performance.
+

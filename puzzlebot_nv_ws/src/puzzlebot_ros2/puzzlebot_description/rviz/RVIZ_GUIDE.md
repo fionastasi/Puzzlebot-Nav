@@ -16,3 +16,4 @@ This folder contains RViz profiles for the robot description package.
 
 - Checking link geometry alignment after xacro edits.
 - Verifying TF tree and frame naming.
+

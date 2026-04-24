@@ -126,6 +126,7 @@ This package is simulation-specific, so most of it is replaced or disabled on ha
 ## Related docs
 
 - config/PARAMETERS.md
-- config/README.md
-- launch/README.md
-- worlds/README.md
+- config/CONFIG_GUIDE.md
+- launch/LAUNCH_GUIDE.md
+- worlds/WORLDS_GUIDE.md
+

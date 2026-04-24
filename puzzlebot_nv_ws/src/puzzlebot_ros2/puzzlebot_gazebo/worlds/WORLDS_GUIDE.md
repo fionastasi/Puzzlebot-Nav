@@ -19,3 +19,4 @@ World geometry and physics directly affect:
 - lidar observations,
 - odometry behavior,
 - navigation difficulty and map quality.
+

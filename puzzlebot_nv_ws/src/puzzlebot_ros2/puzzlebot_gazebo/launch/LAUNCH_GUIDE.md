@@ -16,3 +16,4 @@ This folder contains the main simulation launch entry point.
 - headless: run with reduced graphics stack when true.
 - x_pose, y_pose: initial spawn position.
 - use_sim_time: enables synchronization with simulation clock.
+

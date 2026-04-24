@@ -19,3 +19,4 @@ These files define localization stability, map quality, and planning behavior. M
 
 - map, odom, and base frame names must match your TF tree.
 - scan_topic and odom topic names must match the bridged simulation topics.
+

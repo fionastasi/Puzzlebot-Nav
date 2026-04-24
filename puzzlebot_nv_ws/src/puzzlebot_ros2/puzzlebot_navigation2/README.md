@@ -20,18 +20,18 @@ Navigation package for Puzzlebot with SLAM Toolbox and Nav2.
 - `config/PARAMETERS.md`: parameter explanation guide.
 - `TROUBLESHOOTING.md`: frame/topic mismatch diagnosis and parameter change impacts.
 - `maps/map_maze.yaml`: map metadata used by Nav2.
-- `launch/README.md`: launch architecture and full/core flow.
-- `config/README.md`: config file roles and consistency notes.
-- `maps/README.md`: map artifacts and metadata interpretation.
-- `rviz/README.md`: RViz profile purpose by workflow.
+- `launch/LAUNCH_GUIDE.md`: launch architecture and full/core flow.
+- `config/CONFIG_GUIDE.md`: config file roles and consistency notes.
+- `maps/MAPS_GUIDE.md`: map artifacts and metadata interpretation.
+- `rviz/RVIZ_GUIDE.md`: RViz profile purpose by workflow.
 
 ## Folder guides
 
-- [launch/README.md](launch/README.md)
-- [config/README.md](config/README.md)
+- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
+- [config/CONFIG_GUIDE.md](config/CONFIG_GUIDE.md)
 - [config/PARAMETERS.md](config/PARAMETERS.md)
-- [maps/README.md](maps/README.md)
-- [rviz/README.md](rviz/README.md)
+- [maps/MAPS_GUIDE.md](maps/MAPS_GUIDE.md)
+- [rviz/RVIZ_GUIDE.md](rviz/RVIZ_GUIDE.md)
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ## How to run
@@ -126,3 +126,4 @@ For deeper explanations and tuning effects, see `config/PARAMETERS.md`.
 - `slam.launch.xml` starts `teleop_twist_keyboard` in an `xterm`, so you need `xterm` available when running SLAM mode.
 - Both SLAM and Nav2 launches use `use_sim_time:=true` by default so the stack stays synchronized with the Gazebo clock.
 - The Nav2 launch passes the map and parameter file into the Nav2 core launch, which keeps the setup easy to swap without editing the launch file itself.
+

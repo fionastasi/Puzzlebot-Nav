@@ -133,3 +133,4 @@ NavFnPlanner is the global planner in Nav2. It generates a path on the global co
 - Increase particle counts and scan usage when pose is unstable.
 - Reduce update frequency and beams/rays when CPU is limited.
 - Always keep frame names aligned with your URDF and TF tree.
+

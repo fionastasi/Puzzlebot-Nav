@@ -98,3 +98,4 @@ After launching simulation/navigation:
 - Use base_link for robot geometry and sensors.
 - Use base_footprint when you need a planar ground-projected base frame.
 - Never leave frame naming half-migrated across AMCL, SLAM, costmaps, and odometry plugins.
+
