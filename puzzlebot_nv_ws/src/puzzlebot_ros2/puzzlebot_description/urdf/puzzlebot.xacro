@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="puzzlebot">
+
+    <xacro:args name="prefix" default="" />
+
+    <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot.urdf.xacro"/>
+    <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot_control.xacro"/>
+
+    <xacro:puzzlebot_control prefix="$(arg prefix)"/> <!-- We define prefix so we can have multiple instances of the robot -->
+
+</robot>

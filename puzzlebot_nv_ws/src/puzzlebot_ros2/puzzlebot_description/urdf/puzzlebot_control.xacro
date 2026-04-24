@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro">
+
+    <xacro:macro name= "puzzlebot_control" params="prefix">
+        <gazebo>
+            <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+                <render_engine>ogre2</render_engine>
+            </plugin>
+
+            <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+                <left_joint>${prefix}left_wheel_joint</left_joint>
+                <right_joint>${prefix}right_wheel_joint</right_joint>
+                <wheel_separation>0.19</wheel_separation>
+                <wheel_radius>0.05</wheel_radius>
+                <topic>${prefix}cmd_vel</topic>
+                <tf_topic>diff_drive_tf</tf_topic>
+                <odom_topic>${prefix}odom</odom_topic>
+                <frame_id>${prefix}odom</frame_id> <! -- Father frame for odometry -->
+                <child_frame_id>${prefix}base_footprint</child_frame_id> <! -- Child frame for odometry -->
+                <odom_publisher_frequency>50</odom_publisher_frequency>
+                <max_angular_acceleration>1.8</max_angular_acceleration>
+                <max_angular_velocity>13.0</max_angular_velocity>
+            </plugin>
+
+            <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+                <topic>${prefix}joint_states</topic>
+                <update_rate>50</update_rate>
+                <joint_name>${prefix}left_wheel_joint</joint_name>
+                <joint_name>${prefix}right_wheel_joint</joint_name>
+            </plugin>
+
+        </gazebo>
+    </xacro:macro>    
+
+</robot>
