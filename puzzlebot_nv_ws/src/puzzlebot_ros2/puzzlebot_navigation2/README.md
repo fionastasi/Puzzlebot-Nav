@@ -106,3 +106,9 @@ For deeper explanations and tuning effects, see `config/PARAMETERS.md`.
 - Start with SLAM defaults and verify stable TF + scan data.
 - Tune AMCL particle and laser parameters only after map quality is good.
 - Tune local costmap update rate and window size before changing global planner settings.
+
+## Notes from the launch files
+
+- `slam.launch.xml` starts `teleop_twist_keyboard` in an `xterm`, so you need `xterm` available when running SLAM mode.
+- Both SLAM and Nav2 launches use `use_sim_time:=true` by default so the stack stays synchronized with the Gazebo clock.
+- The Nav2 launch passes the map and parameter file into the Nav2 core launch, which keeps the setup easy to swap without editing the launch file itself.

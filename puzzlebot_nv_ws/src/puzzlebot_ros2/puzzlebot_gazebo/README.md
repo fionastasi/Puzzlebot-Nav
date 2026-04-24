@@ -74,3 +74,9 @@ ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml headless:=true
 - If robot appears in a wrong place, adjust `x_pose` and `y_pose`.
 - If command velocity works but sensors do not, verify `gazebo_bridge.yaml` mappings and topic names.
 - For CI or low-resource runs, prefer `headless:=true`.
+
+## Notes from the launch file
+
+- The launch file includes a commented headless Gazebo block that uses `-s` for server-only mode.
+- That mode can improve performance on low-resource systems because it avoids the GUI.
+- In practice, use `headless:=true` when you want a lighter simulation run.
