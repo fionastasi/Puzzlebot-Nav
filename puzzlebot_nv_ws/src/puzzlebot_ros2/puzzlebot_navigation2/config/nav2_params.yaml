@@ -1,6 +1,57 @@
 amcl:
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: False
+    alpha1: 0.05 #relevant - alphas are the parameters that determine how much the odometry and laser scan data influence the particle filter's estimation of the robot's pose.
+    alpha2: 0.05 #relevant - every alpha parameter corresponds to a specific type of error in the robot's motion or sensor data, and adjusting these parameters can help improve the accuracy of the localization process.
+    alpha3: 0.05 #relevant - 
+    alpha4: 0.05 #relevant
+    alpha5: 0.02 #relevant - movement or drift error, which can occur when the robot's odometry data is not perfectly accurate. By setting alpha5 to a small value, the particle filter can account for this type of error and improve the overall accuracy of the localization process.
+    base_frame_id: "base_footprint"
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: "map"
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 1.0 #relevant - This parameter sets the maximum distance at which the laser scan data is considered for calculating the likelihood of the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is using relevant sensor data to estimate the robot's position and orientation.
+    laser_max_range: 8.0 #relevant - This parameter sets the maximum range of the laser scanner. By setting this parameter to a value that matches the specifications of your laser scanner, you can ensure that the particle filter is using accurate sensor data to estimate the robot's pose. I't the real hardware laser scanner has a maximum range of 8.0 meters, setting this parameter to 100.0 would not be appropriate and could lead to inaccurate localization results.
+    laser_min_range: 0.15 #relevant - This parameter sets the minimum range of the laser scanner. By setting this parameter to a value that matches the specifications of your laser scanner, you can ensure that the particle filter is using accurate sensor data to estimate the robot's pose.
+    laser_model_type: "likelihood_field" #relevant - This parameter specifies the type of laser model used for calculating the likelihood of the robot's pose based on the laser scan data. The "likelihood_field" model is a common choice that uses a precomputed likelihood field to efficiently calculate the likelihood of the robot's pose based on the laser scan data.
+    #the laser max range is 8m but the max dist is set to 1m, which means that the particle filter will only consider laser scan data within a 1 meter radius when calculating the likelihood of the robot's pose. This can help improve the accuracy of the localization process by focusing on relevant sensor data and ignoring distant measurements that may be less reliable.
+    max_beams: 36 #amount of rays from the laser scan that are used for localization. By setting this parameter to a reasonable value, you can ensure that the particle filter is using enough sensor data to accurately estimate the robot's pose without being overwhelmed by too much data.
+    max_particles: 800 #relevant - This is a small map
+    min_particles: 200 #relevant - This is a small map, it will never have less than 200 particles, which can help ensure that the particle filter maintains a sufficient level of accuracy in estimating the robot's pose.
+    odom_frame_id: "odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 1
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    save_poase_rate: 0.5
+    sigma_hit: 0.15
+    tf_broadcast: true
+    transform_tolerance: 0.2
+    update_min_a: 0.1
+    update_min_d: 0.1
+    z_hit: 0.7 # relevant - This parameter sets the weight of the "hit" component in the laser model, which represents the likelihood of a laser scan measurement matching an expected measurement based on the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is giving appropriate weight to accurate sensor measurements when estimating the robot's pose.
+    z_max: 0.05
+    z_rand: 0.2 # relevant - This parameter sets the weight of the "random" component in the laser model, which represents the likelihood of a laser scan measurement being a random measurement that does not match any expected measurement based on the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is accounting for the possibility of random sensor measurements and not giving them too much weight in the localization process.
+    z_short: 0.05
+    scan_topic: scan
+
+amcl:
+  ros_parameters: 
+    z_short: 0.05
+    scan_topic: scan
+
+amcl_map_client:
+  ros__parameters:
+    use_sim_time: False
+
+amcl_rclcpp_node: 
+  ros__parameters:
+    use_sim_time: False
 
 bt_navigator:
   ros__parameters:
