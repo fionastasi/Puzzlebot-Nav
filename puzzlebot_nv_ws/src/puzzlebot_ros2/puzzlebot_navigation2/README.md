@@ -18,7 +18,21 @@ Navigation package for Puzzlebot with SLAM Toolbox and Nav2.
 - `config/slam_toolbox.yaml`: SLAM parameters.
 - `config/nav2_params.yaml`: AMCL/Nav2/costmap parameters.
 - `config/PARAMETERS.md`: parameter explanation guide.
+- `TROUBLESHOOTING.md`: frame/topic mismatch diagnosis and parameter change impacts.
 - `maps/map_maze.yaml`: map metadata used by Nav2.
+- `launch/README.md`: launch architecture and full/core flow.
+- `config/README.md`: config file roles and consistency notes.
+- `maps/README.md`: map artifacts and metadata interpretation.
+- `rviz/README.md`: RViz profile purpose by workflow.
+
+## Folder guides
+
+- `launch/README.md`
+- `config/README.md`
+- `config/PARAMETERS.md`
+- `maps/README.md`
+- `rviz/README.md`
+- `TROUBLESHOOTING.md`
 
 ## How to run
 

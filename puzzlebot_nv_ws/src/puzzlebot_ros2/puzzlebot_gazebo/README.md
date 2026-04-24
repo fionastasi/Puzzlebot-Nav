@@ -13,6 +13,19 @@ Simulation package for Puzzlebot in Gazebo (world launch, robot spawn, ROS<->Gaz
 - `worlds/maze.world`: Gazebo world.
 - `launch/puzzlebot_gazebo.launch.xml`: simulation launch.
 - `config/gazebo_bridge.yaml`: bridge topic mappings.
+- `config/PARAMETERS.md`: detailed explanation of bridge parameters, topic origins, and directions.
+- `TROUBLESHOOTING.md`: common simulation/bridge failures and impact of prefix/value changes.
+- `config/README.md`: overview of bridge config files and data flow.
+- `launch/README.md`: launch orchestration and argument behavior.
+- `worlds/README.md`: simulation world structure and purpose.
+
+## Folder guides
+
+- `config/README.md`
+- `config/PARAMETERS.md`
+- `launch/README.md`
+- `worlds/README.md`
+- `TROUBLESHOOTING.md`
 
 ## How to run
 
