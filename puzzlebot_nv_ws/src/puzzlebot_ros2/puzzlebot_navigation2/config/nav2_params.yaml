@@ -1,26 +1,25 @@
 amcl:
   ros__parameters:
     use_sim_time: true
-    alpha1: 0.05 #relevant - alphas are the parameters that determine how much the odometry and laser scan data influence the particle filter's estimation of the robot's pose.
-    alpha2: 0.05 #relevant - every alpha parameter corresponds to a specific type of error in the robot's motion or sensor data, and adjusting these parameters can help improve the accuracy of the localization process.
-    alpha3: 0.05 #relevant - 
-    alpha4: 0.05 #relevant
-    alpha5: 0.02 #relevant - movement or drift error, which can occur when the robot's odometry data is not perfectly accurate. By setting alpha5 to a small value, the particle filter can account for this type of error and improve the overall accuracy of the localization process.
-    base_frame_id: "base_footprint"
+    alpha1: 0.05
+    alpha2: 0.05
+    alpha3: 0.05
+    alpha4: 0.05
+    alpha5: 0.02
+    base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
     do_beamskip: false
     global_frame_id: "map"
     lambda_short: 0.1
-    laser_likelihood_max_dist: 1.0 #relevant - This parameter sets the maximum distance at which the laser scan data is considered for calculating the likelihood of the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is using relevant sensor data to estimate the robot's position and orientation.
-    laser_max_range: 8.0 #relevant - This parameter sets the maximum range of the laser scanner. By setting this parameter to a value that matches the specifications of your laser scanner, you can ensure that the particle filter is using accurate sensor data to estimate the robot's pose. I't the real hardware laser scanner has a maximum range of 8.0 meters, setting this parameter to 100.0 would not be appropriate and could lead to inaccurate localization results.
-    laser_min_range: 0.15 #relevant - This parameter sets the minimum range of the laser scanner. By setting this parameter to a value that matches the specifications of your laser scanner, you can ensure that the particle filter is using accurate sensor data to estimate the robot's pose.
-    laser_model_type: "likelihood_field" #relevant - This parameter specifies the type of laser model used for calculating the likelihood of the robot's pose based on the laser scan data. The "likelihood_field" model is a common choice that uses a precomputed likelihood field to efficiently calculate the likelihood of the robot's pose based on the laser scan data.
-    #the laser max range is 8m but the max dist is set to 1m, which means that the particle filter will only consider laser scan data within a 1 meter radius when calculating the likelihood of the robot's pose. This can help improve the accuracy of the localization process by focusing on relevant sensor data and ignoring distant measurements that may be less reliable.
-    max_beams: 36 #amount of rays from the laser scan that are used for localization. By setting this parameter to a reasonable value, you can ensure that the particle filter is using enough sensor data to accurately estimate the robot's pose without being overwhelmed by too much data.
-    max_particles: 800 #relevant - This is a small map
-    min_particles: 200 #relevant - This is a small map, it will never have less than 200 particles, which can help ensure that the particle filter maintains a sufficient level of accuracy in estimating the robot's pose.
+    laser_likelihood_max_dist: 1.0
+    laser_max_range: 8.0
+    laser_min_range: 0.15
+    laser_model_type: "likelihood_field"
+    max_beams: 36
+    max_particles: 800
+    min_particles: 200
     odom_frame_id: "odom"
     pf_err: 0.05
     pf_z: 0.99
@@ -28,25 +27,17 @@ amcl:
     recovery_alpha_slow: 0.0
     resample_interval: 1
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    save_poase_rate: 0.5
+    save_pose_rate: 0.5
     sigma_hit: 0.15
     tf_broadcast: true
     transform_tolerance: 0.2
     update_min_a: 0.1
     update_min_d: 0.1
-    z_hit: 0.7 # relevant - This parameter sets the weight of the "hit" component in the laser model, which represents the likelihood of a laser scan measurement matching an expected measurement based on the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is giving appropriate weight to accurate sensor measurements when estimating the robot's pose.
+    z_hit: 0.7
     z_max: 0.05
-    z_rand: 0.2 # relevant - This parameter sets the weight of the "random" component in the laser model, which represents the likelihood of a laser scan measurement being a random measurement that does not match any expected measurement based on the robot's pose. By setting this parameter to a reasonable value, you can ensure that the particle filter is accounting for the possibility of random sensor measurements and not giving them too much weight in the localization process.
+    z_rand: 0.2
     z_short: 0.05
     scan_topic: scan
-
-amcl_map_client:
-  ros__parameters:
-    use_sim_time: true
-
-amcl_rclcpp_node: 
-  ros__parameters:
-    use_sim_time: true
 
 bt_navigator:
   ros__parameters:
@@ -54,16 +45,21 @@ bt_navigator:
     global_frame: map
     robot_base_frame: base_link
     odom_topic: /odom
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    navigators: ["navigate_to_pose", "navigate_through_poses"]
+    navigate_to_pose:
+      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
+    navigate_through_poses:
+      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
 
 controller_server:
   ros__parameters:
     use_sim_time: true
     controller_frequency: 20.0
     min_x_velocity_threshold: 0.001
-    min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
-    failure_tolerance: 0.3
-    progress_checker_plugin: "progress_checker"
+    progress_checker_plugins: ["progress_checker"]
     goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     progress_checker:
@@ -71,43 +67,67 @@ controller_server:
       required_movement_radius: 0.5
       movement_time_allowance: 10.0
     general_goal_checker:
-      stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.25
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.2
+      stateful: true
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.22
-      min_approach_linear_velocity: 0.05
-      lookahead_dist: 0.24
-      min_lookahead_dist: 0.18
-      max_lookahead_dist: 0.40
-      lookahead_time: 1.2
-      use_velocity_scaled_lookahead_dist: true
-      rotate_to_heading_angular_vel: 0.60
+      desired_linear_vel: 0.15
+      lookahead_dist: 0.4
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.6
+      lookahead_time: 1.5
+      rotate_to_heading_angular_vel: 0.8
       transform_tolerance: 0.2
+      use_velocity_scaled_lookahead_dist: false
+      min_approach_linear_velocity: 0.05
+      approach_velocity_scaling_dist: 0.5
+      use_collision_detection: true
+      max_allowed_time_to_collision_up_to_carrot: 1.0
       use_regulated_linear_velocity_scaling: true
-      use_cost_regulated_linear_velocity_scaling: false
-      regulated_linear_scaling_min_radius: 0.90
-      regulated_linear_scaling_min_speed: 0.06
       use_fixed_curvature_lookahead: false
       curvature_lookahead_dist: 0.25
-      use_collision_detection: true
-      max_allowed_time_to_collision_up_to_carrot: 1.00
+      use_cost_regulated_linear_velocity_scaling: false
+      regulated_linear_scaling_min_radius: 0.9
+      regulated_linear_scaling_min_speed: 0.25
       use_rotate_to_heading: true
-      rotate_to_heading_min_angle: 0.70
       allow_reversing: false
+      rotate_to_heading_min_angle: 0.785
+      max_angular_accel: 1.2
       max_robot_pose_search_dist: 10.0
-      interpolate_curvature_after_goal: false
 
 planner_server:
   ros__parameters:
     use_sim_time: true
     expected_planner_frequency: 20.0
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner::NavfnPlanner"
+      tolerance: 0.5
+      use_astar: false
+      allow_unknown: true
 
 behavior_server:
   ros__parameters:
     use_sim_time: true
+    behavior_plugins: ["spin", "back_up", "drive_on_heading", "wait"]
+    spin:
+      plugin: "nav2_behaviors::Spin"
+    back_up:
+      plugin: "nav2_behaviors::BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors::DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors::Wait"
+    local_frame_id: "odom"
+    global_frame_id: "map"
+    robot_base_frame: "base_link"
+    transform_tolerance: 0.1
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    rotational_acc_lim: 3.2
 
 local_costmap:
   local_costmap:
@@ -116,13 +136,30 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_link
       rolling_window: true
-      width: 5.0
-      height: 5.0
+      width: 3
+      height: 3
       resolution: 0.05
-      plugins: ["static_layer","obstacle_layer","inflation_layer"]
+      robot_radius: 0.12
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: true
+        observation_sources: scan
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: true
+          marking: true
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
       inflation_layer:
-        inflation_radius: 0.25
+        plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
+        inflation_radius: 0.3
+      always_send_full_costmap: true
 
 global_costmap:
   global_costmap:
@@ -131,15 +168,42 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       resolution: 0.05
-      plugins: ["static_layer","obstacle_layer","inflation_layer"]
+      robot_radius: 0.12
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: true
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: true
+        observation_sources: scan
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: true
+          marking: true
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
       inflation_layer:
-        inflation_radius: 0.25
+        plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
+        inflation_radius: 0.3
+      always_send_full_costmap: true
 
 map_server:
   ros__parameters:
     use_sim_time: true
     yaml_filename: ""
+
+map_saver:
+  ros__parameters:
+    use_sim_time: true
+    save_map_timeout: 5.0
+    free_thresh_default: 0.25
+    occupied_thresh_default: 0.65
 
 lifecycle_manager_navigation:
   ros__parameters:
@@ -151,3 +215,4 @@ lifecycle_manager_navigation:
       - behavior_server
       - bt_navigator
       - map_server
+      - amcl
