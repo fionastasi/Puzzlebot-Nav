@@ -5,9 +5,9 @@
     <link name="base_link">
       
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0.04" rpy="0 0 0" />
         <geometry>
-          <mesh filename="$(find puzzlebot_description)/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl"
+          <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl"
                 scale="${mesh_scale} ${mesh_scale} ${mesh_scale}" />
         </geometry>
         <material name="gray">

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="puzzlebot">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="puzzlebot">
 
-    <xacro:args name="prefix" default="" />
+    <xacro:arg name="prefix" default="" />
 
     <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot.urdf.xacro"/>
     <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot_control.xacro"/>
