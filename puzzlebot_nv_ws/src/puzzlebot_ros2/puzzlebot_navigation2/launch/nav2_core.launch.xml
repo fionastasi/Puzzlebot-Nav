@@ -1,29 +1,16 @@
 <launch>
-    <arg name="map_path" default="$(find puzzlebot_navigation2)/maps/map_maze.yaml" />
-    <arg name="nav2_params_file" default="$(find puzzlebot_navigation2)/config/nav2_params.yaml" />
-    <arg name="rviz_config_path" default="$(find puzzlebot_navigation2)/rviz/nav2.rviz" />
-    <arg name="use_sim_time" default="true" />
-    
-    <include file="$(find nav2_bringup)/launch/bringup_launch.py"> 
-        <arg name="map" value="$(var map_path)" />
-        <arg name="params_file" value="$(var nav2_params_file)" />
-        <arg name="use_sim_time" value="$(var use_sim_time)" />
-    </include>
+  <arg name="map_path" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml"/>
+  <arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml"/>
+  <arg name="rviz_config_path" default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz"/>
+  <arg name="use_sim_time" default="true"/>
 
-    <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config_path)">
-        <param name="use_sim_time" value="$(var use_sim_time)" />
-    </node>
+  <include file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py">
+    <arg name="map" value="$(var map_path)"/>
+    <arg name="params_file" value="$(var nav2_params_file)"/>
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include>
 
+  <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config_path)">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
 </launch>
-
-// The bringup is used to launch the navigation stack, and it will read the parameters from the nav2_params.yaml file
-    
-    To know what to reference for the bringup we can check the nav2_bringup package and see that the bringup_launch.py 
-    file is looking for a map argument, so we can pass it the map_path argument that we defined at the beginning of this 
-    launch file, as well as use_sim_time argument to use the simulation time, and the params_file argument to pass 
-    the nav2_params.yaml file that we defined at the beginning of this launch file
-    
-    If we didn't use the bringup file we would need to launch the different nodes that are part of the navigation stack, 
-    such as the map_server, amcl, and the different planners and controllers, 
-    but by using the bringup file we can launch all of these nodes with a single command, 
-    and we can also pass the parameters to these nodes through the nav2_params.yaml file.
