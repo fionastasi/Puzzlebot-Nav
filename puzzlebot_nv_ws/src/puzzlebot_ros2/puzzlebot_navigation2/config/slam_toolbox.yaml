@@ -13,3 +13,9 @@ slam_toolbox:
     minimum_time_interval: 0.5
     tf_buffer_duration: 30.0
     enable_interactive_mode: true
+
+    #General SLAM Toolbox parameters
+    use_scan_matching: true
+    use_scan_barycenter: false
+
+    
