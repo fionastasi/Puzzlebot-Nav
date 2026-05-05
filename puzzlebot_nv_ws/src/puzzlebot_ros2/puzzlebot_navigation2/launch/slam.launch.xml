@@ -1,6 +1,6 @@
 <launch>
     <arg name="use_sim_time" default="true" />
-    <arg name="headless" default="false" /> // change to "true" for different performance
+    <arg name="headless" default="false" /><!-- change to "true" for better performance -->
 
     <include file="$(find-pkg-share puzzlebot_gazebo)/launch/puzzlebot_gazebo.launch.xml">
         <arg name="headless" value="$(var headless)"/>
