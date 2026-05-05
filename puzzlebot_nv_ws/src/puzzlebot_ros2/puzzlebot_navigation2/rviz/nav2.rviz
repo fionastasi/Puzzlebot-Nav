@@ -6,10 +6,6 @@ Panels:
       Expanded:
         - /Status1
         - /RobotModel1
-        - /RobotModel1/Status1
-        - /Map1/Status1
-        - /Global Costmap1/Status1
-        - /Local Costmap1/Status1
       Splitter Ratio: 0.5
     Tree Height: 419
   - Class: rviz_common/Selection
@@ -23,7 +19,7 @@ Panels:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
-  - Class: nav2_rviz_plugins/Nav2Panel
+  - Class: nav2_rviz_plugins/Navigation 2
     Name: Navigation 2
 Visualization Manager:
   Class: ""
@@ -359,5 +355,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1524
-  X: 0
-  Y: 0
+  X: -32
+  Y: -32
