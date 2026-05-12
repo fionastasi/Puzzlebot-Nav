@@ -12,19 +12,6 @@ ROS 2 Humble workspace for the Puzzlebot robot, split into three packages:
 - `puzzlebot_gazebo`: simulation world, spawning, and Gazebo bridge.
 - `puzzlebot_navigation2`: SLAM, Nav2, maps, and navigation config.
 
-## 🐳 Development Setup
-
-### Option 1: VSCode DevContainer (Recommended for Windows/WSL2)
-
-Fully containerized development with Docker:
-
-1. Open repository in VSCode
-2. Press `Ctrl+Shift+P` → **"Dev Containers: Reopen in Container"**
-3. Wait for container to build (~5-10 min first time)
-4. ROS2 Humble environment is ready to use
-
-**Benefits:** Reproducible, no local ROS2 install needed, works on Windows + WSL2, isolated environment
-
 📖 [Full DevContainer Guide](.devcontainer/README.md)
 
 ### Option 2: Local Installation
