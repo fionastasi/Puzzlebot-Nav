@@ -2,7 +2,7 @@
     <arg name="map_path" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml" />
     <arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml" />
     <arg name="rviz_config_path" default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz" />
-    <arg name="use_sim_time" default="true" />
+    <arg name="use_sim_time" default="True" />
     
     <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen">
       <param name="use_sim_time" value="$(var use_sim_time)"/>
@@ -19,8 +19,8 @@
         <arg name="map" value="$(var map_path)" />
         <arg name="params_file" value="$(var nav2_params_file)" />
         <arg name="use_sim_time" value="$(var use_sim_time)" />
-        <arg name="use_rviz" value="false" />
-        <arg name="use_localization" value="true" />
+        <arg name="use_rviz" value="False" />
+        <arg name="use_localization" value="True" />
     </include>
 
   <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config_path)">

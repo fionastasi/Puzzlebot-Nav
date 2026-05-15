@@ -5,7 +5,7 @@
 	<let name= "x_pose" value="1.35"/>
 	<let name= "y_pose" value="0.0"/>
 	<let name= "use_sim_time" value="true"/>
-	<arg name="headless" default="false"/> 
+	<arg name="headless" default="False"/> 
 	<set_env name="GZ_SIM_RESOURCE_PATH"
 	         value="$(find-pkg-share puzzlebot_description)/.."/>
 
