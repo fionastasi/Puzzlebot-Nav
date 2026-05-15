@@ -25,7 +25,7 @@
 		<arg name="gazebo" value="false"/>
 	</include>
 
-	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.01 -Y 3.1416"/> 
+	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.05 -Y 3.1416"/> 
 
 	<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
 		<param name="config_file" value="$(var gazebo_bridge_path)"/>
