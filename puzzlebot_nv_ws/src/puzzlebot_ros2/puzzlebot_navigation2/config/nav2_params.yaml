@@ -12,7 +12,7 @@ amcl:
     alpha3: 0.05
     alpha4: 0.05
     alpha5: 0.02
-    base_frame_id: "base_link"
+    base_frame_id: "base_link" #base_footprint
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -50,14 +50,14 @@ bt_navigator:
     use_sim_time: true
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: /odom
+    odom_topic: odom
     bt_loop_duration: 10
     default_server_timeout: 20
     navigators: ["navigate_to_pose", "navigate_through_poses"]
     navigate_to_pose:
-      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
+      plugin: "nav2_bt_navigator/NavigateToPoseNavigator"
     navigate_through_poses:
-      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
+      plugin: "nav2_bt_navigator/NavigateThroughPosesNavigator"
 
 controller_server:
   ros__parameters:
@@ -180,7 +180,7 @@ global_costmap:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: true
       obstacle_layer:
-        plugin: "nav2_costmap_2d::ObstacleLayer"
+        plugin: "nav2_costmap_2d/ObstacleLayer"
         enabled: true
         observation_sources: scan
         scan:
@@ -194,7 +194,7 @@ global_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
       inflation_layer:
-        plugin: "nav2_costmap_2d::InflationLayer"
+        plugin: "nav2_costmap_2d/InflationLayer"
         cost_scaling_factor: 3.0
         inflation_radius: 0.3
       always_send_full_costmap: true
