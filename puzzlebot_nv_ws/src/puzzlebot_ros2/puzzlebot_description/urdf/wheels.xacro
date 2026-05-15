@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="puzzlebot_wheels" params="wheel_radius:=0.033 wheel_width:=0.012 wheel_separation:=0.16 wheel_drop:=0.03 wheel_mass:=0.08 caster_x:=-0.08 caster_radius:=0.015 caster_mass:=0.02 mesh_scale:=0.001">
+  <xacro:macro name="puzzlebot_wheels" params="wheel_radius:=0.033 wheel_width:=0.012 wheel_separation:=0.16 wheel_drop:=0.03 wheel_mass:=0.08 caster_x:=-0.08 caster_radius:=0.015 caster_mass:=0.02 mesh_scale:=1">
     <link name="left_wheel_link">
       <visual>
         <origin xyz="0 0 0" rpy="1.5708 0 0" />

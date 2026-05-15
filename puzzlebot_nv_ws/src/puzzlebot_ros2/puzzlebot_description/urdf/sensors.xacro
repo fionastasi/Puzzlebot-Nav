@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="puzzlebot_sensors" params="lidar_x:=0.0 lidar_z:=0.055 lidar_mass:=0.05 mesh_scale:=0.001">
+  <xacro:macro name="puzzlebot_sensors" params="lidar_x:=0.0 lidar_z:=0.055 lidar_mass:=0.05 mesh_scale:=1">
     <link name="lidar_base_link" />
 
     <joint name="lidar_base_joint" type="fixed">
