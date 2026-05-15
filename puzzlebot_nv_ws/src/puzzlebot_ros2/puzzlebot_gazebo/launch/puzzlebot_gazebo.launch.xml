@@ -13,11 +13,9 @@
 		<arg name="gz_args" value="-r $(var world)"/>
 	</include>
 
-	<!--
-	<include if="$(var headless)" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.xml">
-		<arg name="gz_args" value="-r -s $(var world)"/> // el argumento -s hace que Gazebo se ejecute sin interfaz gráfica, lo que puede mejorar el rendimiento en sistemas con recursos limitados (headless mode).
+	<include if="$(var headless)" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+		<arg name="gz_args" value="-r -s $(var world)"/> <!-- el argumento -s hace que Gazebo se ejecute sin interfaz gráfica, lo que puede mejorar el rendimiento en sistemas con recursos limitados (headless mode). -->
 	</include>
-	-->
 
 	<include file="$(var puzzlebot_description_path)">
 		<arg name="use_sim_time" value="$(var use_sim_time)"/>
