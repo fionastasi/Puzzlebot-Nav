@@ -16,7 +16,7 @@
                 <tf_topic>/model/puzzlebot/tf</tf_topic>
                 <odom_topic>${prefix}odom</odom_topic>
                 <frame_id>${prefix}odom</frame_id> <!-- Father frame for odometry -->
-                <child_frame_id>${prefix}base_link</child_frame_id> <!-- Child frame for odometry -->
+                <child_frame_id>${prefix}base_footprint</child_frame_id> <!-- Child frame for odometry -->
                 <odom_publish_frequency>50</odom_publish_frequency>
                 <max_angular_acceleration>1.8</max_angular_acceleration>
                 <max_angular_velocity>13.0</max_angular_velocity>

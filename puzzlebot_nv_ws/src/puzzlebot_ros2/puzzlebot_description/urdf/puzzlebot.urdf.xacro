@@ -4,16 +4,13 @@
   <xacro:include filename="$(find puzzlebot_description)/urdf/robot_base.xacro" />
   <xacro:include filename="$(find puzzlebot_description)/urdf/wheels.xacro" />
   <xacro:include filename="$(find puzzlebot_description)/urdf/sensors.xacro" />
-<!--<link name="base_footprint"/>-->
-  
+  <link name="base_footprint" />
 
-  <!-- Fixed joint connecting base_footprint to base_link -->
-  <!-- base_footprint is at ground level, base_link is offset upward -->
-  <!-- <joint name="base_link_joint" type="fixed">
+  <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
-    <origin xyz="0.052 0 0.05"/>
-  </joint> -->
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
  
 
   <xacro:robot_base />
