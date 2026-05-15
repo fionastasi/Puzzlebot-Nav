@@ -2,7 +2,7 @@
   <arg name="map_path" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml"/>
   <arg name="use_sim_time" default="True"/>
   <arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml"/>
-  <arg name="headless" default="False"/><!-- true for better performance in VM -->
+  <arg name="headless" default="True"/><!-- true for better performance in VM -->
 
   <include file="$(find-pkg-share puzzlebot_gazebo)/launch/puzzlebot_gazebo.launch.xml">
     <arg name="headless" value="$(var headless)"/>
