@@ -4,6 +4,17 @@
     <arg name="rviz_config_path" default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz" />
     <arg name="use_sim_time" default="true" />
     
+    <node pkg="nav2_map_server" exec="map_server" name="map_server" output="screen">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+      <param name="yaml_filename" value="$(var map_path)"/>
+    </node>
+
+    <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager" name="lifecycle_manager_map" output="screen">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+      <param name="autostart" value="true"/>
+      <param name="node_names" value="['map_server']"/>
+    </node>
+
     <include file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py">
         <arg name="map" value="$(var map_path)" />
         <arg name="params_file" value="$(var nav2_params_file)" />
