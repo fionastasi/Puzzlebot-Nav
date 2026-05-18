@@ -12,6 +12,7 @@ This folder defines the Puzzlebot robot model using modular xacro files.
   - Left and right wheel links, joints, and caster assembly.
 - sensors.xacro
   - Lidar link and fixed mounting joint to base_link.
+  - Current mounting offsets: `base_link -> lidar_base_link` at `0.06 0 0.055`, then `lidar_base_link -> laser_frame` at `0 0 0.021`.
 - puzzlebot_control.xacro
   - Gazebo system plugin macro for diff-drive, sensors, and joint states.
 - puzzlebot.urdf.xacro

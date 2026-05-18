@@ -22,6 +22,9 @@ Generated from YAML and XACRO sources under `puzzlebot_nv_ws/`.
 | puzzlebot_sensors.lidar_mass | 0.05 | src/puzzlebot_ros2/puzzlebot_description/urdf/sensors.xacro |
 | puzzlebot_sensors.lidar_x | 0.06 | src/puzzlebot_ros2/puzzlebot_description/urdf/sensors.xacro |
 | puzzlebot_sensors.lidar_z | 0.055 | src/puzzlebot_ros2/puzzlebot_description/urdf/sensors.xacro |
+| puzzlebot_description TF: base_link -> lidar_base_link | 0.06 0 0.055 | src/puzzlebot_ros2/puzzlebot_description/urdf/sensors.xacro |
+| puzzlebot_description TF: lidar_base_link -> laser_frame | 0 0 0.021 | src/puzzlebot_ros2/puzzlebot_description/urdf/sensors.xacro |
+| puzzlebot_description TF: base_footprint -> base_link | 0 0 0 | src/puzzlebot_ros2/puzzlebot_description/urdf/puzzlebot.urdf.xacro |
 | puzzlebot_wheels.caster_mass | 0.02 | src/puzzlebot_ros2/puzzlebot_description/urdf/wheels.xacro |
 | puzzlebot_wheels.caster_radius | 0.015 | src/puzzlebot_ros2/puzzlebot_description/urdf/wheels.xacro |
 | puzzlebot_wheels.caster_x | -0.08 | src/puzzlebot_ros2/puzzlebot_description/urdf/wheels.xacro |

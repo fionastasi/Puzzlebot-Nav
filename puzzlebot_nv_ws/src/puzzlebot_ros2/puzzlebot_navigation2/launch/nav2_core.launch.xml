@@ -3,6 +3,19 @@
     <arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml" />
     <arg name="rviz_config_path" default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz" />
     <arg name="use_sim_time" default="True" />
+    <arg name="enable_logging" default="True" />
+
+    <!-- Puzzlebot Logger Node (Lifecycle Node) -->
+    <node pkg="puzzlebot_navigation2" exec="puzzlebot_logger.py" name="puzzlebot_logger" output="screen" if="$(var enable_logging)">
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+
+    <!-- Lifecycle Manager to manage the logger node -->
+    <node pkg="nav2_lifecycle_manager" exec="lifecycle_manager_nodes.py" name="lifecycle_manager_logger" output="screen" if="$(var enable_logging)">
+        <param name="autostart" value="true"/>
+        <param name="node_names" value="['puzzlebot_logger']"/>
+        <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
 
     <include file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py">
         <arg name="map" value="$(var map_path)" />
