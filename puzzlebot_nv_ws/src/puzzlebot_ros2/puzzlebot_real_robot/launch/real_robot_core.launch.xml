@@ -9,8 +9,8 @@
          ros2 launch puzzlebot_real_robot real_robot_core.launch.xml
 
        Publishes:
-         /odom        — puzzlebot_localization (encoder integration)
-         /scan        — rplidar_ros
+         /odom         — puzzlebot_localization (encoder integration)
+         /scan         — rplidar_ros
          /joint_states — puzzlebot_joint_state_publisher
          TF: odom -> base_footprint -> base_link -> laser_frame
   ============================================================ -->
@@ -34,14 +34,20 @@
   <!-- RPLidar A1 — publishes /scan (sensor_msgs/LaserScan)
        frame_id must match URDF: laser_frame
        Verify port with: ls /dev/ttyUSB* -->
-  <include file="$(find-pkg-share rplidar_ros)/launch/rplidar_a1_launch.py">
-    <arg name="serial_port" value="/dev/ttyUSB1" />
-    <arg name="frame_id"    value="laser_frame" />
-  </include>
+  <node pkg="rplidar_ros"
+        exec="rplidar_node"
+        name="rplidar_node"
+        output="screen">
+    <param name="serial_port"      value="/dev/ttyUSB1" />
+    <param name="serial_baudrate"  value="115200" />
+    <param name="frame_id"         value="laser_frame" />
+    <param name="angle_compensate" value="true" />
+    <param name="scan_mode"        value="Standard" />
+  </node>
 
   <!-- Odometry node — reads /VelocityEncR and /VelocityEncL,
        publishes /odom (nav_msgs/Odometry)
-       r=0.05 m, l=0.19 m — must match physical robot -->
+       r=0.033 m, l=0.16 m — must match physical robot -->
   <node pkg="puzzlebot_real_robot"
         exec="puzzlebot_localization.py"
         name="puzzlebot_localization"
