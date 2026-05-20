@@ -1,0 +1,57 @@
+<launch>
+  <!-- ============================================================
+       PUZZLEBOT REAL ROBOT - HARDWARE CORE
+       ============================================================
+       Starts all real hardware drivers and publishes the TF tree.
+       Run this on the Jetson before launching slam or nav2.
+
+       Usage:
+         ros2 launch puzzlebot_real_robot real_robot_core.launch.xml
+
+       Publishes:
+         /odom        — puzzlebot_localization (encoder integration)
+         /scan        — rplidar_ros
+         /joint_states — puzzlebot_joint_state_publisher
+         TF: odom -> base_footprint -> base_link -> laser_frame
+  ============================================================ -->
+
+  <!-- Robot description — load urdf.xacro directly to avoid
+       puzzlebot_control.xacro Gazebo plugins being parsed -->
+  <let name="urdf_path"
+       value="$(find-pkg-share puzzlebot_description)/urdf/puzzlebot.urdf.xacro" />
+
+  <node pkg="robot_state_publisher" exec="robot_state_publisher" output="screen">
+    <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
+    <param name="use_sim_time" value="false" />
+  </node>
+
+  <!-- micro-ROS agent — bridges Jetson MCU with ROS 2
+       Publishes /VelocityEncR and /VelocityEncL (std_msgs/Float32)
+       Subscribes to /cmd_vel
+       Verify port with: ls /dev/ttyUSB* -->
+  <include file="/home/puzzlebot/ros2_ws/install/puzzlebot_ros/share/puzzlebot_ros/micro_ros_agent.launch.py" />
+
+  <!-- RPLidar A1 — publishes /scan (sensor_msgs/LaserScan)
+       frame_id must match URDF: laser_frame
+       Verify port with: ls /dev/ttyUSB* -->
+  <include file="$(find-pkg-share rplidar_ros)/launch/rplidar_a1_launch.py">
+    <arg name="serial_port" value="/dev/ttyUSB1" />
+    <arg name="frame_id"    value="laser_frame" />
+  </include>
+
+  <!-- Odometry node — reads /VelocityEncR and /VelocityEncL,
+       publishes /odom (nav_msgs/Odometry)
+       r=0.05 m, l=0.19 m — must match physical robot -->
+  <node pkg="puzzlebot_real_robot"
+        exec="puzzlebot_localization.py"
+        name="puzzlebot_localization"
+        output="screen" />
+
+  <!-- Joint state publisher — reads /odom, publishes /joint_states
+       and broadcasts TF odom -> base_footprint -->
+  <node pkg="puzzlebot_real_robot"
+        exec="puzzlebot_joint_state_publisher.py"
+        name="puzzlebot_joint_state_publisher"
+        output="screen" />
+
+</launch>

@@ -1,129 +1,68 @@
 # puzzlebot_navigation2
 
-Navigation package for Puzzlebot with SLAM Toolbox and Nav2.
+This package contains the Nav2 and SLAM stack for Puzzlebot. It provides two pairs of launch files: full simulation launchers that include Gazebo, and core launchers with no Gazebo and no hardware. The core launchers are reused by `puzzlebot_real_robot` for the physical robot.
 
-## What this package provides
+## Package structure
 
-- SLAM workflow for map creation.
-- Navigation workflow on a known map (AMCL + Nav2).
-- RViz profiles for both modes.
-- Central configuration files for AMCL, costmaps, and SLAM.
-
-## Important files
-
-- `launch/slam.launch.xml`: full SLAM mode launch.
-- `launch/slam_core.launch.xml`: SLAM core nodes.
-- `launch/nav2.launch.xml`: full Nav2 mode launch.
-- `launch/nav2_core.launch.xml`: Nav2 bringup and RViz.
-- `config/slam_toolbox.yaml`: SLAM parameters.
-- `config/nav2_params.yaml`: AMCL/Nav2/costmap parameters.
-- `config/PARAMETERS.md`: parameter explanation guide.
-- `TROUBLESHOOTING.md`: frame/topic mismatch diagnosis and parameter change impacts.
-- `maps/map_maze.yaml`: map metadata used by Nav2.
-- `launch/LAUNCH_GUIDE.md`: launch architecture and full/core flow.
-- `config/CONFIG_GUIDE.md`: config file roles and consistency notes.
-- `maps/MAPS_GUIDE.md`: map artifacts and metadata interpretation.
-- `rviz/RVIZ_GUIDE.md`: RViz profile purpose by workflow.
-
-## Folder guides
-
-- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
-- [config/CONFIG_GUIDE.md](config/CONFIG_GUIDE.md)
-- [config/PARAMETERS.md](config/PARAMETERS.md)
-- [maps/MAPS_GUIDE.md](maps/MAPS_GUIDE.md)
-- [rviz/RVIZ_GUIDE.md](rviz/RVIZ_GUIDE.md)
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-
-## How to run
-
-SLAM mode (create/update map):
-
-```bash
-ros2 launch puzzlebot_navigation2 slam.launch.xml
+```
+puzzlebot_navigation2/
+├── launch/
+│   ├── slam.launch.xml       # simulation SLAM includes puzzlebot_gazebo + slam_core
+│   ├── slam_core.launch.xml  # SLAM only, no simulation, reused by real robot
+│   ├── nav2.launch.xml       # simulation Nav2 includes puzzlebot_gazebo + nav2_core
+│   └── nav2_core.launch.xml  # Nav2 only, no simulation, reused by real robot
+├── config/
+│   ├── slam_toolbox.yaml     # SLAM parameters for simulation
+│   └── nav2_params.yaml      # Nav2 parameters for simulation
+├── maps/
+│   ├── my_map.pgm
+│   └── map_maze.yaml         # simulation map files
+└── rviz/
+    ├── slam.rviz
+    └── nav2.rviz
 ```
 
-Navigation mode (known map):
+## Launch architecture
 
-```bash
-ros2 launch puzzlebot_navigation2 nav2.launch.xml
-```
+The package uses a two-layer design.
 
-Use a different map path in Nav2 mode:
+- Full launchers (`slam.launch.xml`, `nav2.launch.xml`) start simulation and include the Gazebo layer plus the corresponding core layer.
+- Core launchers (`slam_core.launch.xml`, `nav2_core.launch.xml`) start only the SLAM or Nav2 stack and are reusable by any bringup.
+- Core launchers accept `use_sim_time`, `slam_params_file`, `nav2_params_file`, and `map_path` as arguments.
+- The real robot does not call `slam.launch.xml` or `nav2.launch.xml`; it uses only the `_core` variants.
 
-```bash
-ros2 launch puzzlebot_navigation2 nav2.launch.xml map_path:=/absolute/path/to/map.yaml
-```
+## Bridge topics
 
-## Key launch snippets
+| Topic | Direction | Type |
+|-------|-----------|------|
+| `/clock` | GZ_TO_ROS | `rosgraph_msgs/msg/Clock` |
+| `/cmd_vel` | ROS_TO_GZ | `geometry_msgs/msg/Twist` |
+| `/odom` | GZ_TO_ROS | `nav_msgs/msg/Odometry` |
+| `/tf` | GZ_TO_ROS | `tf2_msgs/msg/TFMessage` |
+| `/joint_states` | GZ_TO_ROS | `sensor_msgs/msg/JointState` |
+| `/scan` | GZ_TO_ROS | `sensor_msgs/msg/LaserScan` |
 
-SLAM launcher includes simulation and SLAM core:
+## Key config differences: sim vs real
 
-```xml
-<include file="$(find-pkg-share puzzlebot_gazebo)/launch/puzzlebot_gazebo.launch.xml">
-    <arg name="headless" value="$(var headless)"/>
-</include>
+| Parameter | Simulation | Real |
+|-----------|------------|------|
+| `use_sim_time` | `true` | `false` |
+| `base_frame` | `base_link` | `base_footprint` |
+| `transform_tolerance` | `0.2` | `0.5` |
+| `max_beams` | `36` | `120` |
+| `controller_frequency` | `20.0` | `10.0` |
 
-<include file="$(find-pkg-share puzzlebot_navigation2)/launch/slam_core.launch.xml">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="slam_params_file" value="$(find-pkg-share puzzlebot_navigation2)/config/slam_toolbox.yaml"/>
-    <arg name="rviz_config_path" value="$(find-pkg-share puzzlebot_navigation2)/rviz/slam.rviz" />
-</include>
-```
+## Launch file arguments
 
-Nav2 launcher passes map and params into Nav2 core:
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `headless` | `false` | Run Gazebo without GUI when true |
 
-```xml
-<arg name="map_path" default="$(find-pkg-share puzzlebot_navigation2)/maps/map_maze.yaml"/>
-<arg name="nav2_params_file" default="$(find-pkg-share puzzlebot_navigation2)/config/nav2_params.yaml"/>
+## Usage
 
-<include file="$(find-pkg-share puzzlebot_navigation2)/launch/nav2_core.launch.xml">
-    <arg name="map_path" value="$(var map_path)"/>
-    <arg name="nav2_params_file" value="$(var nav2_params_file)"/>
-    <arg name="rviz_config_path" value="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz"/>
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-</include>
-```
+Do not launch this package directly. The simulation-only launchers are included by `puzzlebot_navigation2/launch/slam.launch.xml` and `puzzlebot_navigation2/launch/nav2.launch.xml`.
 
-## Parameter definitions (quick)
+## Simulation-only warning
 
-### SLAM parameters (`config/slam_toolbox.yaml`)
-
-- `mode`: set to `mapping` to build/update map.
-- `resolution`: map cell size in meters.
-- `max_laser_range`: maximum scan range used by SLAM.
-- `map_update_interval`: map refresh interval.
-- `minimum_time_interval`: minimum time between SLAM updates.
-
-### AMCL and Nav2 parameters (`config/nav2_params.yaml`)
-
-- `min_particles`, `max_particles`: particle filter robustness vs CPU.
-- `alpha1` to `alpha5`: odometry motion noise model.
-- `z_hit`, `z_rand`, `max_beams`: laser model behavior.
-- `update_min_d`, `update_min_a`: pose update thresholds.
-- `local_costmap` and `global_costmap`: local obstacle handling vs global route planning.
-
-### Costmap parameters (most tuned)
-
-- `global_frame`: `map` for global costmap, usually `odom` for local costmap.
-- `robot_base_frame`: robot body frame in TF.
-- `resolution`: detail vs compute cost.
-- `update_frequency`: costmap update speed.
-- `publish_frequency`: publication rate for consumers/visualization.
-- `width` and `height`: local window size.
-- `rolling_window`: if true, local window follows robot.
-- `plugins`: active costmap layers.
-
-For deeper explanations and tuning effects, see `config/PARAMETERS.md`.
-
-## Tuning workflow suggestion
-
-- Start with SLAM defaults and verify stable TF + scan data.
-- Tune AMCL particle and laser parameters only after map quality is good.
-- Tune local costmap update rate and window size before changing global planner settings.
-
-## Notes from the launch files
-
-- `slam.launch.xml` starts `teleop_twist_keyboard` in an `xterm`, so you need `xterm` available when running SLAM mode.
-- Both SLAM and Nav2 launches use `use_sim_time:=true` by default so the stack stays synchronized with the Gazebo clock.
-- The Nav2 launch passes the map and parameter file into the Nav2 core launch, which keeps the setup easy to swap without editing the launch file itself.
+This package is simulation-only. `slam.launch.xml` and `nav2.launch.xml` depend on `puzzlebot_gazebo` and must not be used on real hardware.
 

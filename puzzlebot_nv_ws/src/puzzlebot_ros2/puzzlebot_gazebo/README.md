@@ -1,96 +1,41 @@
 # puzzlebot_gazebo
 
-Simulation package for Puzzlebot in Gazebo (world launch, robot spawn, ROS<->Gazebo bridge).
+This package is simulation-only. It launches Gazebo (gz-sim), spawns the Puzzlebot robot, and runs \os_gz_bridge\ to forward topics between Gazebo and ROS 2. Nothing in this package runs on real hardware.
 
-## What this package provides
+## Package structure
 
-- Loads the simulation world.
-- Spawns Puzzlebot from `robot_description`.
-- Bridges critical topics (`/cmd_vel`, `/scan`, `/odom`, `/tf`, `/clock`).
+`
+puzzlebot_gazebo/
+├── launch/
+│   └── puzzlebot_gazebo.launch.xml
+├── config/
+│   └── gazebo_bridge.yaml
+└── worlds/
+    └── maze.world
+`
 
-## Important files
+## Bridge topics
 
-- `worlds/maze.world`: Gazebo world.
-- `launch/puzzlebot_gazebo.launch.xml`: simulation launch.
-- `config/gazebo_bridge.yaml`: bridge topic mappings.
-- `config/PARAMETERS.md`: detailed explanation of bridge parameters, topic origins, and directions.
-- `TROUBLESHOOTING.md`: common simulation/bridge failures and impact of prefix/value changes.
-- `config/CONFIG_GUIDE.md`: overview of bridge config files and data flow.
-- `launch/LAUNCH_GUIDE.md`: launch orchestration and argument behavior.
-- `worlds/WORLDS_GUIDE.md`: simulation world structure and purpose.
+| Topic | Direction | Message type |
+|-------|-----------|--------------|
+| /clock | GZ_TO_ROS | osgraph_msgs/msg/Clock |
+| /cmd_vel | ROS_TO_GZ | geometry_msgs/msg/Twist |
+| /odom | GZ_TO_ROS | 
+av_msgs/msg/Odometry |
+| /tf | GZ_TO_ROS | 	f2_msgs/msg/TFMessage |
+| /joint_states | GZ_TO_ROS | sensor_msgs/msg/JointState |
+| /scan | GZ_TO_ROS | sensor_msgs/msg/LaserScan |
 
-## Folder guides
+## Launch file args
 
-- [config/CONFIG_GUIDE.md](config/CONFIG_GUIDE.md)
-- [config/PARAMETERS.md](config/PARAMETERS.md)
-- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
-- [worlds/WORLDS_GUIDE.md](worlds/WORLDS_GUIDE.md)
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+| Argument | Default | Description |
+|----------|---------|-------------|
+| headless | alse | Run Gazebo without GUI when true |
 
-## How to run
+## Usage
 
-Standard simulation:
+Do not call this launch directly. It is included by puzzlebot_navigation2/launch/slam.launch.xml and puzzlebot_navigation2/launch/nav2.launch.xml.
 
-```bash
-ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml
-```
+## Simulation-only warning
 
-Headless simulation:
-
-```bash
-ros2 launch puzzlebot_gazebo puzzlebot_gazebo.launch.xml headless:=true
-```
-
-## Key launch snippet
-
-```xml
-<include file="$(var puzzlebot_description_path)">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="rviz" value="false"/>
-    <arg name="gazebo" value="false"/>
-</include>
-
-<node pkg="ros_gz_sim" exec="create" output="screen"
-      args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.01 -Y 3.1416"/>
-
-<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
-    <param name="config_file" value="$(var gazebo_bridge_path)"/>
-</node>
-```
-
-## Bridge configuration snippet
-
-```yaml
-- ros_topic_name: "/cmd_vel"
-  gz_topic_name: "/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
-
-- ros_topic_name: "/scan"
-  gz_topic_name: "/scan"
-  ros_type_name: "sensor_msgs/msg/LaserScan"
-  gz_type_name: "gz.msgs.LaserScan"
-  direction: GZ_TO_ROS
-```
-
-## Launch argument definitions
-
-- `world`: world file loaded by Gazebo.
-- `headless`: runs without GUI when true.
-- `x_pose`, `y_pose`: initial robot pose at spawn.
-- `use_sim_time`: enables `/clock` synchronization.
-- `gazebo_bridge_path`: bridge YAML file path.
-
-## Tuning notes
-
-- If robot appears in a wrong place, adjust `x_pose` and `y_pose`.
-- If command velocity works but sensors do not, verify `gazebo_bridge.yaml` mappings and topic names.
-- For CI or low-resource runs, prefer `headless:=true`.
-
-## Notes from the launch file
-
-- The launch file includes a commented headless Gazebo block that uses `-s` for server-only mode.
-- That mode can improve performance on low-resource systems because it avoids the GUI.
-- In practice, use `headless:=true` when you want a lighter simulation run.
-
+This entire package is simulation-only. Do not include it as a dependency in real robot packages.

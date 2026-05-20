@@ -3,19 +3,30 @@
 <package format="3">
   <name>puzzlebot_navigation2</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Nav2 and SLAM stack for Puzzlebot. Provides simulation launchers
+  (slam, nav2) and reusable core launchers (slam_core, nav2_core) used by both
+  simulation and real robot bringup.</description>
   <maintainer email="aaraizae@hotmail.com">Alejandro</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Nav2 stack -->
   <exec_depend>nav2_bringup</exec_depend>
   <exec_depend>nav2_lifecycle_manager</exec_depend>
-  <exec_depend>puzzlebot_gazebo</exec_depend>
+
+  <!-- SLAM -->
   <exec_depend>slam_toolbox</exec_depend>
+
+  <!-- Visualization -->
   <exec_depend>rviz2</exec_depend>
+
+  <!-- Teleop (used in slam.launch.xml for simulation) -->
   <exec_depend>teleop_twist_keyboard</exec_depend>
-  <exec_depend>lifecycle_msgs</exec_depend>
+
+  <!-- NOTE: puzzlebot_gazebo is intentionally NOT listed here.
+       slam.launch.xml and nav2.launch.xml include it at runtime,
+       but navigation2 must remain usable without simulation. -->
 
   <export>
     <build_type>ament_cmake</build_type>

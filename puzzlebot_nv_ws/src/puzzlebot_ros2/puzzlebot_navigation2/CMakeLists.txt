@@ -12,14 +12,8 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY launch config maps rviz scripts nodes tools
+  DIRECTORY launch config maps rviz scripts
   DESTINATION share/${PROJECT_NAME}/
-)
-
-# Install Python nodes
-install(
-  PROGRAMS nodes/puzzlebot_logger.py
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

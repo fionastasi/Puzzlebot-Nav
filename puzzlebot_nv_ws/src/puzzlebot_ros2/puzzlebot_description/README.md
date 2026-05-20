@@ -1,87 +1,77 @@
 # puzzlebot_description
 
-Robot description package for Puzzlebot (URDF/Xacro, meshes, TF tree, and RViz profile).
+This package holds the URDF/Xacro robot description, meshes, and the robot_state_publisher launch file for Puzzlebot. It is shared by simulation and the real robot, and it does not contain Gazebo plugins or hardware drivers.
 
-## What this package provides
+## Package structure
 
-- Modular robot model using Xacro includes.
-- Robot state publishing from generated URDF.
-- Optional RViz and joint state GUI launch options.
+```
+puzzlebot_description/
+├── urdf/
+│   ├── puzzlebot.xacro
+│   ├── puzzlebot.urdf.xacro
+│   ├── puzzlebot_control.xacro
+│   ├── sensors.xacro
+│   ├── wheels.xacro
+│   ├── robot_base.xacro
+│   └── macros.xacro
+├── meshes/
+│   ├── Puzzlebot_Jetson_Lidar_Edition_Base.stl
+│   ├── Puzzlebot_Wheel.stl
+│   ├── Puzzlebot_Caster_Wheel.stl
+│   └── RPLidar.stl
+├── launch/
+│   └── puzzlebot_description.launch.xml
+└── rviz/
+    └── puzzlebot_description.rviz
+```
 
-## Important files
+## URDF architecture
 
-- `urdf/puzzlebot.urdf.xacro`: top-level robot model.
-- `urdf/robot_base.xacro`: base link/body.
-- `urdf/wheels.xacro`: wheel links/joints.
-- `urdf/sensors.xacro`: sensor links/joints.
-- `XACRO_OVERVIEW.md`: xacro architecture, composition flow, conventions, and references.
-- `TF_FRAMES.md`: explanation of map/odom/base_footprint/base_link and frame conventions.
-- `TROUBLESHOOTING.md`: common issues, prefix/frame impacts, and safe change workflow.
-- `urdf/URDF_GUIDE.md`: component-by-component guide for all xacro/URDF files in this folder.
-- `launch/LAUNCH_GUIDE.md`: launch behavior, arguments, and usage notes.
-- `rviz/RVIZ_GUIDE.md`: RViz profile purpose and workflow usage.
-- `meshes/MESHES_GUIDE.md`: mesh assets and how they are used.
-- `launch/puzzlebot_description.launch.xml`: launch entry point.
-- `rviz/puzzlebot_description.rviz`: RViz profile.
+The top-level description is assembled through Xacro includes.
 
-## Folder guides
+- `puzzlebot.xacro` loads `puzzlebot.urdf.xacro` and `puzzlebot_control.xacro`.
+- `puzzlebot.urdf.xacro` includes the core robot structure: `robot_base.xacro`, `wheels.xacro`, `sensors.xacro`, and `macros.xacro`.
+- `puzzlebot_control.xacro` contains Gazebo-only plugins for differential drive, joint state publishing, and simulated sensors.
 
-- [urdf/URDF_GUIDE.md](urdf/URDF_GUIDE.md)
-- [launch/LAUNCH_GUIDE.md](launch/LAUNCH_GUIDE.md)
-- [rviz/RVIZ_GUIDE.md](rviz/RVIZ_GUIDE.md)
-- [meshes/MESHES_GUIDE.md](meshes/MESHES_GUIDE.md)
-- [XACRO_OVERVIEW.md](XACRO_OVERVIEW.md)
-- [TF_FRAMES.md](TF_FRAMES.md)
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+This package is used by both simulation and real robot workflows. The real robot launch bypasses `puzzlebot_control.xacro` by loading `puzzlebot.urdf.xacro` directly.
 
-## How to run
+## TF tree
+
+The URDF defines the robot frame chain in this order:
+
+- `map`
+- `odom`
+- `base_footprint`
+- `base_link`
+  - `wheel_l_joint`
+  - `wheel_r_joint`
+  - `caster_joint`
+- `lidar_base_link`
+  - `laser_frame`
+
+## Launch file arguments
+
+| Argument     | Default | Description |
+|--------------|---------|-------------|
+| `use_sim_time` | `false` | Use the simulation clock on `/clock` |
+| `rviz`         | `false` | Start RViz with the package RViz profile |
+| `joint_gui`    | `false` | Start `joint_state_publisher_gui` for joint inspection |
+| `gazebo`       | `false` | Enable any simulation-specific launch behavior |
+
+## Simulation-only sections
+
+The following are simulation-only and must not run on real hardware:
+
+- `puzzlebot_control.xacro` plugins
+- `<gazebo>` tags in `sensors.xacro`
+
+## Usage
+
+Launch the robot description and state publisher with:
 
 ```bash
 ros2 launch puzzlebot_description puzzlebot_description.launch.xml
 ```
 
-With RViz and joint GUI:
-
-```bash
-ros2 launch puzzlebot_description puzzlebot_description.launch.xml rviz:=true joint_gui:=true
-```
-
-## Key launch snippet
-
-```xml
-<node pkg="robot_state_publisher" exec="robot_state_publisher" output="screen">
-    <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
-    <param name="use_sim_time" value="$(var use_sim_time)" />
-</node>
-
-<node pkg="rviz2" exec="rviz2" output="screen" if="$(var rviz)" args="-d $(var rviz_config_path)">
-    <param name="use_sim_time" value="$(var use_sim_time)" />
-</node>
-```
-
-## Xacro composition snippet
-
-```xml
-<xacro:include filename="$(find puzzlebot_description)/urdf/macros.xacro" />
-<xacro:include filename="$(find puzzlebot_description)/urdf/robot_base.xacro" />
-<xacro:include filename="$(find puzzlebot_description)/urdf/wheels.xacro" />
-<xacro:include filename="$(find puzzlebot_description)/urdf/sensors.xacro" />
-
-<xacro:robot_base />
-<xacro:puzzlebot_wheels />
-<xacro:puzzlebot_sensors />
-```
-
-## Launch argument definitions
-
-- `rviz`: opens RViz with package profile when true.
-- `joint_gui`: opens `joint_state_publisher_gui` for manual joint testing.
-- `use_sim_time`: uses simulation clock (`/clock`) when true.
-- `urdf_path`: Xacro path used to generate `robot_description`.
-- `rviz_config_path`: RViz config path for robot visualization.
-
-## Tuning notes
-
-- If TF appears static or delayed in simulation, set `use_sim_time:=true`.
-- If visualization is heavy for your machine, keep `rviz:=false` in this launch and open RViz only from nav/sim workflows.
+For RViz and joint GUI in simulation workflows, use the corresponding launch arguments.
 
