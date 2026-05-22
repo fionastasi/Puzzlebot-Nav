@@ -53,11 +53,11 @@ bt_navigator:
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
-    navigators: ["navigate_to_pose", "navigate_through_poses"]
-    navigate_to_pose:
-      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
-    navigate_through_poses:
-      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
+    default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
+    enable_groot_monitor: false
+    groot_zmq_publisher_port: 1666
+    groot_zmq_server_port: 1667
+    plugin_lib_names: ["nav2_bt_navigator", "nav2_recoveries", "nav2_behavior_tree_plugins"]
 
 controller_server:
   ros__parameters:
