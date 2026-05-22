@@ -119,11 +119,11 @@ behavior_server:
     use_sim_time: true
     behavior_plugins: ["spin", "back_up", "wait"]
     spin:
-      plugin: "nav2_behaviors::Spin"
+      plugin: "nav2_behaviors/Spin"
     back_up:
-      plugin: "nav2_behaviors::BackUp"
+      plugin: "nav2_behaviors/BackUp"
     wait:
-      plugin: "nav2_behaviors::Wait"
+      plugin: "nav2_behaviors/Wait"
     local_frame_id: "odom"
     global_frame_id: "map"
     robot_base_frame: "base_footprint"
