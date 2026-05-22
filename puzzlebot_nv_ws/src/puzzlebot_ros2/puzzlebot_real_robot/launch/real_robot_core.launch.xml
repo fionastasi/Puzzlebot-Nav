@@ -60,4 +60,11 @@
         name="puzzlebot_joint_state_publisher"
         output="screen" />
 
+  <!-- TF fix — connects laser_frame (URDF) with laser (some RPLidar
+       driver versions publish /scan in 'laser' regardless of frame_id).
+       Identity transform: same physical position. -->
+  <node pkg="tf2_ros" exec="static_transform_publisher"
+        name="laser_tf_fix"
+        args="0 0 0 0 0 0 laser_frame laser" />
+
 </launch>

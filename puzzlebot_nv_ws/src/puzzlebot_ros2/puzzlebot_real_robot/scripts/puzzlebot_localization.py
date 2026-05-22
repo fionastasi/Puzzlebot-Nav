@@ -13,6 +13,7 @@ import math
 import numpy as np
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from std_msgs.msg import Float32
 from nav_msgs.msg import Odometry
 
@@ -51,9 +52,18 @@ class PuzzlebotLocalization(Node):
         self.wr = 0.0  # right
         self.wl = 0.0  # left
 
+        # micro-ROS publishes the encoder topics with BEST_EFFORT reliability.
+        # The default subscription QoS is RELIABLE, which is INCOMPATIBLE and
+        # results in zero messages received. This QoS profile must match.
+        qos_sensor = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.VOLATILE,
+            depth=10,
+        )
+
         # Subscriptions
-        self.create_subscription(Float32, '/VelocityEncR', self._cb_wr, 10)
-        self.create_subscription(Float32, '/VelocityEncL', self._cb_wl, 10)
+        self.create_subscription(Float32, '/VelocityEncR', self._cb_wr, qos_sensor)
+        self.create_subscription(Float32, '/VelocityEncL', self._cb_wl, qos_sensor)
 
         # Publisher
         self._odom_pub = self.create_publisher(Odometry, '/odom', 10)
