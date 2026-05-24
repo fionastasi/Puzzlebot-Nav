@@ -1,19 +1,19 @@
 # puzzlebot_description
 
-This package holds the URDF/Xacro robot description, meshes, and the robot_state_publisher launch file for Puzzlebot. It is shared by simulation and the real robot, and it does not contain Gazebo plugins or hardware drivers.
+This package holds the URDF/Xacro robot description, meshes, and the robot_state_publisher launch file for Puzzlebot. It is shared by simulation and the real robot, and it does not contain Gazebo plugins or hardware drivers directly in the package manifest.
 
 ## Package structure
 
 ```
 puzzlebot_description/
 ├── urdf/
+│   ├── macros.xacro
+│   ├── puzzlebot_control.xacro
 │   ├── puzzlebot.xacro
 │   ├── puzzlebot.urdf.xacro
-│   ├── puzzlebot_control.xacro
 │   ├── sensors.xacro
-│   ├── wheels.xacro
-│   ├── robot_base.xacro
-│   └── macros.xacro
+│   ├── sensors_properties.xacro
+│   └── URDF_GUIDE.md
 ├── meshes/
 │   ├── Puzzlebot_Jetson_Lidar_Edition_Base.stl
 │   ├── Puzzlebot_Wheel.stl
@@ -29,25 +29,25 @@ puzzlebot_description/
 
 The top-level description is assembled through Xacro includes.
 
-- `puzzlebot.xacro` loads `puzzlebot.urdf.xacro` and `puzzlebot_control.xacro`.
-- `puzzlebot.urdf.xacro` includes the core robot structure: `robot_base.xacro`, `wheels.xacro`, `sensors.xacro`, and `macros.xacro`.
-- `puzzlebot_control.xacro` contains Gazebo-only plugins for differential drive, joint state publishing, and simulated sensors.
+- `puzzlebot.urdf.xacro` is the primary robot model file used by the package launch file.
+- `puzzlebot.urdf.xacro` includes `macros.xacro`, `puzzlebot_control.xacro`, and `sensors.xacro`.
+- `puzzlebot_control.xacro` contains Gazebo plugin configuration for diff-drive, sensors, and joint state publishing.
+- `puzzlebot.xacro` is a thin wrapper around `puzzlebot.urdf.xacro`.
+- `sensors_properties.xacro` holds additional sensor and chassis parameter defaults and is not included by default in the main launch path.
 
-This package is used by both simulation and real robot workflows. The real robot launch bypasses `puzzlebot_control.xacro` by loading `puzzlebot.urdf.xacro` directly.
+The launch file `puzzlebot_description.launch.xml` loads `puzzlebot.urdf.xacro` directly.
 
 ## TF tree
 
-The URDF defines the robot frame chain in this order:
+The URDF defines these robot frames:
 
-- `map`
-- `odom`
 - `base_footprint`
 - `base_link`
-  - `wheel_l_joint`
-  - `wheel_r_joint`
-  - `caster_joint`
-- `lidar_base_link`
-  - `laser_frame`
+  - `right_wheel_link`
+  - `left_wheel_link`
+  - `caster_link`
+  - `lidar_base_link`
+    - `laser_frame`
 
 ## Launch file arguments
 
@@ -56,11 +56,11 @@ The URDF defines the robot frame chain in this order:
 | `use_sim_time` | `false` | Use the simulation clock on `/clock` |
 | `rviz`         | `false` | Start RViz with the package RViz profile |
 | `joint_gui`    | `false` | Start `joint_state_publisher_gui` for joint inspection |
-| `gazebo`       | `false` | Enable any simulation-specific launch behavior |
+| `gazebo`       | `false` | Launch Gazebo and include simulation behavior |
 
 ## Simulation-only sections
 
-The following are simulation-only and must not run on real hardware:
+The following are simulation-only and are relevant when the robot description is used inside Gazebo:
 
 - `puzzlebot_control.xacro` plugins
 - `<gazebo>` tags in `sensors.xacro`

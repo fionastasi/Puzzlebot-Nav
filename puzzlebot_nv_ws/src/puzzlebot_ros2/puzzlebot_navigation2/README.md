@@ -28,7 +28,8 @@ The package uses a two-layer design.
 
 - Full launchers (`slam.launch.xml`, `nav2.launch.xml`) start simulation and include the Gazebo layer plus the corresponding core layer.
 - Core launchers (`slam_core.launch.xml`, `nav2_core.launch.xml`) start only the SLAM or Nav2 stack and are reusable by any bringup.
-- Core launchers accept `use_sim_time`, `slam_params_file`, `nav2_params_file`, and `map_path` as arguments.
+- `slam_core.launch.xml` accepts `use_sim_time`, `slam_params_file`, and `rviz_config_path`.
+- `nav2_core.launch.xml` accepts `use_sim_time`, `nav2_params_file`, `map_path`, and `rviz_config_path`.
 - The real robot does not call `slam.launch.xml` or `nav2.launch.xml`; it uses only the `_core` variants.
 
 ## Bridge topics
@@ -60,9 +61,9 @@ The package uses a two-layer design.
 
 ## Usage
 
-Do not launch this package directly. The simulation-only launchers are included by `puzzlebot_navigation2/launch/slam.launch.xml` and `puzzlebot_navigation2/launch/nav2.launch.xml`.
+Use `slam.launch.xml` and `nav2.launch.xml` for full Gazebo-based simulation. For hardware or external bringup, use the `_core` variants instead.
 
 ## Simulation-only warning
 
-This package is simulation-only. `slam.launch.xml` and `nav2.launch.xml` depend on `puzzlebot_gazebo` and must not be used on real hardware.
+The full launchers in this package are simulation-only. `slam.launch.xml` and `nav2.launch.xml` depend on `puzzlebot_gazebo`, so they should not be used on real hardware.
 

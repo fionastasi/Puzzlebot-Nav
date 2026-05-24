@@ -1,101 +1,81 @@
 # Puzzlebot TF Frames Guide
 
-This guide explains frame names used in this repository, where each one comes from, why it exists, and how they differ.
+This document describes the actual TF frames used by Puzzlebot and who publishes them.
 
-## Big picture
+## Frames in this repo
 
-In mobile robot navigation, the common TF chain is:
+- `map`
+  - Global world frame used by localization and global planning.
+  - Produced by SLAM or map-localization nodes, not by the robot URDF.
 
-map -> odom -> base_footprint -> base_link -> sensors and wheels
+- `odom`
+  - Local odometry reference for the robot pose over time.
+  - In simulation, `puzzlebot_control.xacro` / Gazebo diff-drive publishes odometry.
+  - On the real robot, the odometry node / joint_state_publisher publishes `odom -> base_footprint`.
 
-Not every project uses all frames. Some use base_link directly under odom.
+- `base_footprint`
+  - Planar robot base frame at the floor level.
+  - Child of `odom` in the live TF tree.
+  - Used by navigation as the robot pose reference in the plane.
 
-## Frame by frame
+- `base_link`
+  - Physical robot body frame from the URDF.
+  - Published by `robot_state_publisher` from the fixed joint between `base_footprint` and `base_link`.
+  - Used by sensors, robot geometry, RViz, and some navigation components.
 
-| Frame | What it represents | Who usually publishes it | Where it appears in this repo |
-|---|---|---|---|
-| map | Global, world-fixed frame used for localization and global planning | AMCL or SLAM Toolbox | puzzlebot_navigation2/config/nav2_params.yaml, puzzlebot_navigation2/config/slam_toolbox.yaml |
-| odom | Local continuous frame from wheel integration, smooth but drifting over time | Gazebo diff drive or wheel odometry node | puzzlebot_description/urdf/puzzlebot_control.xacro, puzzlebot_navigation2/config/nav2_params.yaml, puzzlebot_navigation2/config/slam_toolbox.yaml |
-| base_footprint | Robot base projected on the ground plane (ignores body height and often roll/pitch) | Odometry source or dedicated transform publisher | puzzlebot_description/urdf/puzzlebot_control.xacro, puzzlebot_navigation2/config/nav2_params.yaml |
-| base_link | Physical robot body frame (3D body reference used by URDF links) | robot_state_publisher (from URDF joints) | puzzlebot_description/urdf/robot_base.xacro, wheels.xacro, sensors.xacro, puzzlebot_navigation2/config/nav2_params.yaml, puzzlebot_navigation2/config/slam_toolbox.yaml |
-| lidar_link | Lidar sensor frame | robot_state_publisher | puzzlebot_description/urdf/sensors.xacro |
-| left_wheel_link/right_wheel_link | Wheel link frames | robot_state_publisher | puzzlebot_description/urdf/wheels.xacro |
+- `right_wheel_link` / `left_wheel_link` / `caster_link`
+  - Wheel and caster frames defined in the URDF.
+  - Published by `robot_state_publisher` as child links of `base_link`.
 
-## Why both base_footprint and base_link exist
+- `lidar_base_link`
+  - LiDAR mount link attached to `base_link`.
+  - Defined in `sensors.xacro` and published by `robot_state_publisher`.
 
-base_footprint and base_link are related but not identical.
+- `laser_frame`
+  - Actual LiDAR beam / scan frame.
+  - Child of `lidar_base_link` and referenced by the laser scanner output.
 
-base_footprint:
-- Ground-contact reference for planar motion.
-- Commonly used by localization for 2D navigation assumptions.
-- Usually keeps z near zero and ignores roll/pitch.
+## What publishes these frames
 
-base_link:
-- True robot body reference frame from URDF.
-- Used for sensor mounting geometry and full 3D kinematics.
-- Has transforms to lidar_link, wheel links, caster, and other robot parts.
+- `robot_state_publisher`
+  - Publishes the URDF static transforms for `base_footprint -> base_link` and all child links.
+  - This includes wheels, caster, `lidar_base_link`, and `laser_frame`.
 
-In practice:
-- Localization and odom chains often use base_footprint.
-- Costmaps, planners, and SLAM often use base_link.
-- A transform between base_footprint and base_link is required if both are used.
+- Gazebo diff-drive plugin (`puzzlebot_control.xacro`)
+  - Publishes odometry and the transform from `odom` to `base_footprint` in simulation.
+  - The plugin also produces joint-state information for the wheel joints.
 
-## What is configured right now in this repo
+- `ros_gz_bridge`
+  - Bridges Gazebo TF messages into ROS on `/tf`.
+  - In this repo, Gazebo TF is mapped into ROS so the robot and navigation stack see the same TF tree.
 
-Current configuration is mixed:
+- Real robot odometry node / joint_state_publisher
+  - For real hardware, the code publishes `odom -> base_footprint` from wheel odometry.
 
-- AMCL uses base_frame_id: base_footprint.
-- Nav2 behavior and costmaps use robot_base_frame: base_link.
-- SLAM Toolbox uses base_frame: base_link.
-- Gazebo diff-drive in puzzlebot_control.xacro sets child_frame_id to base_footprint.
-- URDF explicitly defines base_link and child links, but base_footprint is not defined as a URDF link.
+- LiDAR driver / sensor plugin
+  - Publishes scans in the `laser_frame` coordinate frame.
 
-This can work only if the TF tree still provides all required transforms at runtime.
+## What these frames mean
 
-## Potential mismatch to watch
+- `base_footprint` is the robot pose for 2D navigation and odometry.
+- `base_link` is the robot body frame used for URDF geometry and sensors.
+- `laser_frame` is the LiDAR measurement frame.
+- `odom` is the moving local frame that carries drift over time.
+- `map` is the fixed global frame used by localization and planners.
 
-If base_footprint is referenced but not available in TF, components that depend on it will warn or fail transform lookups.
+## Notes for this repo
 
-Typical symptoms:
-- AMCL warnings about missing transform.
-- Nav2 waiting on transforms.
-- RViz TF tree missing one of map, odom, base_footprint, base_link.
+- The repo uses both `base_footprint` and `base_link` together.
+- `base_footprint` is the frame used by the live odometry source.
+- `base_link` is the frame used by the robot description and sensors.
+- Keep configuration consistent: navigation should use `base_footprint` if the odometry source publishes that frame.
 
-## Recommended conventions
+## Quick checks
 
-Choose one of these patterns and keep it consistent:
+- `ros2 run tf2_tools view_frames`
+- `ros2 run tf2_ros tf2_echo odom base_footprint`
+- `ros2 run tf2_ros tf2_echo odom base_link`
+- `ros2 run tf2_ros tf2_echo map odom`
 
-Option A (common in many robots):
-- map -> odom -> base_footprint -> base_link
-- AMCL base_frame_id: base_footprint
-- Nav2 robot_base_frame: base_link
-- Ensure base_footprint -> base_link is published
-
-Option B (simpler chain):
-- map -> odom -> base_link
-- AMCL base_frame_id: base_link
-- Nav2 robot_base_frame: base_link
-- Do not reference base_footprint anywhere
-
-Either is valid. Consistency matters more than the specific choice.
-
-## How to verify the frames quickly
-
-After launching simulation/navigation:
-
-1. Print available TF frames:
-   - ros2 run tf2_tools view_frames
-2. Check transform availability:
-   - ros2 run tf2_ros tf2_echo odom base_link
-   - ros2 run tf2_ros tf2_echo odom base_footprint
-   - ros2 run tf2_ros tf2_echo map odom
-3. Confirm parameter values match your TF tree:
-   - nav2_params.yaml for AMCL and costmaps
-   - slam_toolbox.yaml for SLAM
-
-## Practical rule of thumb
-
-- Use base_link for robot geometry and sensors.
-- Use base_footprint when you need a planar ground-projected base frame.
-- Never leave frame naming half-migrated across AMCL, SLAM, costmaps, and odometry plugins.
+If `base_footprint` is missing, navigation or odometry consumers will fail to locate the robot pose.
 
