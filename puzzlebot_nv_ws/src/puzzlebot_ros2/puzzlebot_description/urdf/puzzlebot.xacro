@@ -6,6 +6,6 @@
     <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot.urdf.xacro"/>
     <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot_control.xacro"/>
 
-    <xacro:puzzlebot_control prefix="$(arg prefix)"/> <!-- We define prefix so we can have multiple instances of the robot -->
+    <xacro:puzzlebot_control prefix="$(arg prefix)"/>
 
-</robot>
+</robot> 

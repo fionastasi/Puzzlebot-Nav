@@ -1,19 +1,153 @@
 <?xml version="1.0"?>
 <robot name="puzzlebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find puzzlebot_description)/urdf/macros.xacro" />
-  <xacro:include filename="$(find puzzlebot_description)/urdf/robot_base.xacro" />
-  <xacro:include filename="$(find puzzlebot_description)/urdf/wheels.xacro" />
+  <xacro:include filename="$(find puzzlebot_description)/urdf/puzzlebot_control.xacro" />
   <xacro:include filename="$(find puzzlebot_description)/urdf/sensors.xacro" />
+  
+  <xacro:arg name="prefix" default="" />
+
+
+<!-- Define materials -->
+  <material name="red"><color rgba="1.0 0.0 0.0 1.0" /></material>
+  <material name="yellow"><color rgba="1.0 1.0 0.0 1.0" /></material> 
+  
+
   <link name="base_footprint" />
 
-  <joint name="base_footprint_joint" type="fixed">
+
+  <!-- Base -->
+  <link name="base_link">
+    <inertial>
+      <mass value="1.0" />
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0.052 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="red" />
+    </visual>
+    <collision>
+      <origin xyz="0 0.052 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_link_joint" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
-    <origin xyz="0 0 0" rpy="0 0 0" />
+    <origin xyz="0.052 0 0.05" />
   </joint>
- 
 
-  <xacro:robot_base />
-  <xacro:puzzlebot_wheels />
-  <xacro:puzzlebot_sensors />
+  <gazebo reference="base_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <!-- Right Wheel -->
+  <link name="right_wheel_link">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="red" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="-1.5708 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link> 
+
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="right_wheel_link" />
+    <origin xyz="0 -0.095 -0.0025"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <gazebo reference="right_wheel_link">
+    <mu1>0.7</mu1>
+    <mu2>0.7</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <!-- Left Wheel -->
+  <link name="left_wheel_link">
+    <inertial>
+      <mass value="0.1" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="red" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0" />
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="left_wheel_link" />
+    <origin xyz="0 0.095 -0.0025"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <gazebo reference="left_wheel_link">
+    <mu1>0.7</mu1>
+    <mu2>0.7</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <!-- Caster Wheel -->
+  <link name="caster_link">
+    <inertial>
+      <mass value="0.05" />
+      <inertia ixx="0.0005" ixy="0.0" ixz="0.0" iyy="0.0005" iyz="0.0" izz="0.0005" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="red" />
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="caster_link" />
+    <origin xyz="-0.147 0 -0.043"/>
+  </joint>
+
+  <gazebo reference="caster_link">
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <material>Gazebo/Yellow</material>
+  </gazebo>
+
+  <xacro:puzzlebot_control prefix="$(arg prefix)" />
+  <xacro:rplidar_sensor prefix="$(arg prefix)" />
+
 </robot>
