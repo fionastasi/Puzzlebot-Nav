@@ -5,16 +5,11 @@
 	<let name= "x_pose" value="1.35"/>
 	<let name= "y_pose" value="0.0"/>
 	<let name= "use_sim_time" value="true"/>
-	<arg name="headless" default="False"/> 
-	<set_env name="GZ_SIM_RESOURCE_PATH"
-	         value="$(find-pkg-share puzzlebot_description)/.."/>
+	<arg name="headless" default="false"/> 
+	<set_env name="GZ_SIM_RESOURCE_PATH" value="$(env GZ_SIM_RESOURCE_PATH ''):$(find-pkg-share puzzlebot_description)/.."/>
 
 	<include if="$(not $(var headless))" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
 		<arg name="gz_args" value="-r $(var world)"/>
-	</include>
-
-	<include if="$(var headless)" file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-		<arg name="gz_args" value="-r -s $(var world)"/> <!-- el argumento -s hace que Gazebo se ejecute sin interfaz gráfica, lo que puede mejorar el rendimiento en sistemas con recursos limitados (headless mode). -->
 	</include>
 
 	<include file="$(var puzzlebot_description_path)">
@@ -23,9 +18,10 @@
 		<arg name="gazebo" value="false"/>
 	</include>
 
-	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.05 -Y 3.1416"/> 
+	<node pkg="ros_gz_sim" exec="create" output="screen" args="-name puzzlebot -topic robot_description -x $(var x_pose) -y $(var y_pose) -z 0.05 -Y -1.57"/> 
 
 	<node pkg="ros_gz_bridge" exec="parameter_bridge" output="screen">
 		<param name="config_file" value="$(var gazebo_bridge_path)"/>
+		<param name="use_sim_time" value="true"/>
 	</node>
 </launch>
