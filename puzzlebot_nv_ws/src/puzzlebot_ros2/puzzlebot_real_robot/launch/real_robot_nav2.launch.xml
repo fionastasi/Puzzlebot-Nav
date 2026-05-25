@@ -1,28 +1,14 @@
 <launch>
-  <!-- ============================================================
-       REAL ROBOT NAV2 — AUTONOMOUS NAVIGATION
-       ============================================================
-       Runs Nav2 stack for autonomous navigation on physical robot.
-       Run real_robot_core.launch.xml on the Jetson first.
-
-       Usage:
-         On Jetson: ros2 launch puzzlebot_real_robot real_robot_core.launch.xml
-         On laptop: ros2 launch puzzlebot_real_robot real_robot_nav2.launch.xml
-
-       Override map:
-         ros2 launch puzzlebot_real_robot real_robot_nav2.launch.xml \
-           map_path:=/path/to/your/map.yaml
-  ============================================================ -->
-
   <arg name="map_path"
        default="$(find-pkg-share puzzlebot_real_robot)/maps/map_real.yaml" />
+  <arg name="nav2_params_file"
+       default="$(find-pkg-share puzzlebot_real_robot)/config/nav2_params_real.yaml" />
+  <arg name="rviz_config_file"
+       default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz" />
 
-  <!-- Robot State Publisher on laptop — provides the static TF tree
-       (base_footprint -> base_link -> laser_frame) locally so RViz and
-       AMCL can resolve transforms without depending on the Jetson's TF. -->
+  <!-- Publish the robot's URDF to the ROS parameter server -->
   <let name="urdf_path"
        value="$(find-pkg-share puzzlebot_description)/urdf/puzzlebot.urdf.xacro" />
-
   <node pkg="robot_state_publisher" exec="robot_state_publisher"
         name="robot_state_publisher" output="screen">
     <param name="robot_description" value="$(command 'xacro $(var urdf_path)')" />
@@ -32,21 +18,14 @@
   <!-- Nav2 stack: AMCL, costmaps, planners -->
   <include file="$(find-pkg-share nav2_bringup)/launch/bringup_launch.py">
     <arg name="use_sim_time"  value="false" />
-    <arg name="params_file"
-         value="$(find-pkg-share puzzlebot_real_robot)/config/nav2_params_real.yaml" />
+    <arg name="params_file" value="$(var nav2_params_file)" />
     <arg name="map" value="$(var map_path)" />
   </include>
 
   <!-- RViz for navigation visualization -->
   <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"
-        args="-d $(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz">
+        args="-d $(var rviz_config_file)">
     <param name="use_sim_time" value="false" />
   </node>
-
-  <!-- Safety stop: publish cmd_vel=0 when this launch is killed -->
-  <executable
-    cmd="ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.0}, angular: {z: 0.0}}'"
-    output="screen"
-    on_exit="shutdown" />
 
 </launch>

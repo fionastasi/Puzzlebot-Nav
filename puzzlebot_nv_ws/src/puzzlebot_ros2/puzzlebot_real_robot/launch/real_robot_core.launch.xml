@@ -1,22 +1,6 @@
 <launch>
-  <!-- ============================================================
-       PUZZLEBOT REAL ROBOT - HARDWARE CORE
-       ============================================================
-       Starts all real hardware drivers and publishes the TF tree.
-       Run this on the Jetson before launching slam or nav2.
 
-       Usage:
-         ros2 launch puzzlebot_real_robot real_robot_core.launch.xml
-
-       Publishes:
-         /odom         — puzzlebot_localization (encoder integration)
-         /scan         — rplidar_ros
-         /joint_states — puzzlebot_joint_state_publisher
-         TF: odom -> base_footprint -> base_link -> laser_frame
-  ============================================================ -->
-
-  <!-- Robot description — load urdf.xacro directly to avoid
-       puzzlebot_control.xacro Gazebo plugins being parsed -->
+  <!-- Robot state publishes the static TF tree -->
   <let name="urdf_path"
        value="$(find-pkg-share puzzlebot_description)/urdf/puzzlebot.urdf.xacro" />
 
@@ -25,29 +9,16 @@
     <param name="use_sim_time" value="false" />
   </node>
 
-  <!-- micro-ROS agent — bridges Jetson MCU with ROS 2
-       Publishes /VelocityEncR and /VelocityEncL (std_msgs/Float32)
-       Subscribes to /cmd_vel
-       Verify port with: ls /dev/ttyUSB* -->
+  <!-- micro-ROS agent — bridges Jetson MCU with ROS 2 -->
   <include file="/home/puzzlebot/ros2_ws/install/puzzlebot_ros/share/puzzlebot_ros/micro_ros_agent.launch.py" />
 
-  <!-- RPLidar A1 — publishes /scan (sensor_msgs/LaserScan)
-       frame_id must match URDF: laser_frame
-       Verify port with: ls /dev/ttyUSB* -->
-  <node pkg="rplidar_ros"
-        exec="rplidar_node"
-        name="rplidar_node"
-        output="screen">
-    <param name="serial_port"      value="/dev/ttyUSB1" />
-    <param name="serial_baudrate"  value="115200" />
-    <param name="frame_id"         value="laser_frame" />
-    <param name="angle_compensate" value="true" />
-    <param name="scan_mode"        value="Standard" />
-  </node>
+  <!-- RPLidar A1 — publishes /scan -->
+  <include file="$(find-pkg-share rplidar_ros)/launch/rplidar_a1_launch.py">
+    <arg name="serial_port" value="/dev/ttyUSB1" /> <!-- Replace with actual port -->
+    <arg name="frame_id" value="laser_frame" />
+  </include>
 
-  <!-- Odometry node — reads /VelocityEncR and /VelocityEncL,
-       publishes /odom (nav_msgs/Odometry)
-       r=0.033 m, l=0.16 m — must match physical robot -->
+  <!-- Localization node — reads /scan and /joint_states, publishes /odom -->
   <node pkg="puzzlebot_real_robot"
         exec="puzzlebot_localization.py"
         name="puzzlebot_localization"
@@ -60,9 +31,7 @@
         name="puzzlebot_joint_state_publisher"
         output="screen" />
 
-  <!-- TF fix — connects laser_frame (URDF) with laser (some RPLidar
-       driver versions publish /scan in 'laser' regardless of frame_id).
-       Identity transform: same physical position. -->
+  <!-- TF fix: connect laser_frame (URDF) with laser -->
   <node pkg="tf2_ros" exec="static_transform_publisher"
         name="laser_tf_fix"
         args="0 0 0 0 0 0 laser_frame laser" />

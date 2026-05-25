@@ -1,17 +1,4 @@
 <launch>
-  <!-- ============================================================
-       REAL ROBOT SLAM — MAP GENERATION
-       ============================================================
-       Generates a map of the physical environment using SLAM Toolbox.
-       Run real_robot_core.launch.xml on the Jetson first.
-
-       Usage:
-         On Jetson: ros2 launch puzzlebot_real_robot real_robot_core.launch.xml
-         On laptop: ros2 launch puzzlebot_real_robot real_robot_slam.launch.xml
-
-       Save map when done:
-         ros2 run nav2_map_server map_saver_cli -f maps/map_real
-  ============================================================ -->
 
   <!-- Robot State Publisher on laptop — provides the static TF tree
        (base_footprint -> base_link -> laser_frame) locally so RViz and
@@ -32,10 +19,11 @@
     <arg name="use_sim_time" value="false" />
   </include>
 
+  <arg name="rviz_config_file"
+       default="$(find-pkg-share puzzlebot_navigation2)/rviz/slam.rviz" />
   <!-- RViz for map visualization -->
   <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"
-        args="-d $(find-pkg-share puzzlebot_navigation2)/rviz/slam.rviz"
-        launch-prefix="bash -c 'sleep 5; $0 $@'">
+        args="-d $(var rviz_config_file)">
     <param name="use_sim_time" value="false" />
   </node>
 
