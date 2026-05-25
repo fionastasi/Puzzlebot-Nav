@@ -19,7 +19,7 @@
 #    use_scan_barycenter: true 
 
 slam_toolbox:
-  ros_parameters:
+  ros__parameters:
     
     solver_plugin: solver_plugins::CeresSolver
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY

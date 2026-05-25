@@ -75,7 +75,7 @@ class PuzzlebotJointStatePublisher(Node):
 
         js = JointState()
         js.header.stamp = self.get_clock().now().to_msg()
-        js.name         = ['wheel_left_joint', 'wheel_right_joint']
+        js.name         = ['left_wheel_joint', 'right_wheel_joint']
         js.position     = [self._angle_l, self._angle_r]
         self.joint_pub.publish(js)
 
