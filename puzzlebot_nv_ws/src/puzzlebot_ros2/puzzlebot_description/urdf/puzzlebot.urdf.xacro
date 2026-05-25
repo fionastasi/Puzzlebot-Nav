@@ -148,6 +148,6 @@
   </gazebo>
 
   <xacro:puzzlebot_control prefix="$(arg prefix)" />
-  <xacro:rplidar_sensor prefix="$(arg prefix)" />
+  <xacro:puzzlebot_sensors prefix="$(arg prefix)" />
 
 </robot>
