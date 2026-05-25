@@ -12,9 +12,9 @@
                 <right_joint>${prefix}right_wheel_joint</right_joint>
                 <wheel_separation>0.19</wheel_separation>
                 <wheel_radius>0.045</wheel_radius>
-                <topic>$/cmd_vel</topic>
+                <topic>/cmd_vel</topic>
                 <tf_topic>/model/puzzlebot/tf</tf_topic>
-                <odom_topic>$/odom</odom_topic>
+                <odom_topic>/odom</odom_topic>
                 <frame_id>${prefix}odom</frame_id> <!-- Father frame for odometry -->
                 <child_frame_id>${prefix}base_footprint</child_frame_id> <!-- Child frame for odometry -->
                 <odom_publish_frequency>50</odom_publish_frequency>
