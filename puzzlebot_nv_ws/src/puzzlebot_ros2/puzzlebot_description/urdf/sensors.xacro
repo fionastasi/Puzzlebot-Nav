@@ -80,7 +80,7 @@
         <inertial>
             <origin xyz="${lidar_base_inertia_pos_x} ${lidar_base_inertia_pos_y} ${lidar_base_inertia_pos_z}" rpy="${lidar_base_inertia_pos_r} ${lidar_base_inertia_pos_p} ${lidar_base_inertia_pos_w}"/>
             <mass value="${lidar_base_mass}"/>
-            <xacro:box_inertia mass="${lidar_base_mass}" x="${lidar_base_length}" y="${lidar_base_width}" z="${lidar_base_height}" />
+            <xacro:box_inertial mass="${lidar_base_mass}" x="${lidar_base_length}" y="${lidar_base_width}" z="${lidar_base_height}" />
         </inertial>
     </link>
 
@@ -104,7 +104,7 @@
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <mass value="1e-5"/>
-            <xacro:box_inertia mass="1e-5" x="0.005" y="0.005" z="0.005" />
+            <xacro:box_inertial mass="1e-5" x="0.005" y="0.005" z="0.005" />
         </inertial>
     </link>
 
