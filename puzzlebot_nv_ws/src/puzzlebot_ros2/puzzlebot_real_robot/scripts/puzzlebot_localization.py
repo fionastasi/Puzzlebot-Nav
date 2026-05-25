@@ -11,6 +11,7 @@ Publishes:
 """
 import math
 import numpy as np
+import math
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
@@ -25,20 +26,16 @@ def quaternion_from_euler(roll: float, pitch: float, yaw: float) -> np.ndarray:
     cr, sr = math.cos(roll),  math.sin(roll)
     cp, sp = math.cos(pitch), math.sin(pitch)
     cy, sy = math.cos(yaw),   math.sin(yaw)
-    q = np.empty(4)
+    q = np.empty((4,0))
     q[0] = cp * sr * cy - sp * cr * sy  # x
     q[1] = cp * cr * sy + sp * sr * cy  # y
-    q[2] = cp * sr * sy - sp * cr * cy  # z — fixed sign vs reference
+    q[2] = cp * sr * sy - sp * cr * cy  # z 
     q[3] = cp * cr * cy + sp * sr * sy  # w
     return q
 
 
 class PuzzlebotLocalization(Node):
     """Differential-drive odometry via encoder integration."""
-
-    # Physical parameters — must match wheels.xacro defaults
-    WHEEL_RADIUS    = 0.033  # m
-    WHEEL_SEPARATION = 0.16  # m
 
     def __init__(self):
         super().__init__('puzzlebot_localization')
@@ -47,6 +44,10 @@ class PuzzlebotLocalization(Node):
         self.x     = 0.0
         self.y     = 0.0
         self.theta = 0.0
+
+        # Robot parameters (must match physical robot)
+        self.r = 0.05  # Wheel radius (m)
+        self.l = 0.19  # Wheel separation (m)
 
         # Wheel angular velocities (rad/s) from encoders
         self.wr = 0.0  # right
@@ -72,8 +73,7 @@ class PuzzlebotLocalization(Node):
         self._dt = 0.01
         self.create_timer(self._dt, self._update)
 
-        self.get_logger().info('puzzlebot_localization started — r=%.3f m  l=%.3f m' %
-                               (self.WHEEL_RADIUS, self.WHEEL_SEPARATION))
+        self.get_logger().info('puzzlebot_localization started')
 
     def _cb_wr(self, msg: Float32):
         self.wr = msg.data
@@ -82,8 +82,8 @@ class PuzzlebotLocalization(Node):
         self.wl = msg.data
 
     def _update(self):
-        r = self.WHEEL_RADIUS
-        l = self.WHEEL_SEPARATION
+        r = self.r
+        l = self.l
 
         # Forward kinematics
         v = r * (self.wr + self.wl) / 2.0
@@ -96,20 +96,20 @@ class PuzzlebotLocalization(Node):
 
         q = quaternion_from_euler(0.0, 0.0, self.theta)
 
-        msg = Odometry()
-        msg.header.stamp            = self.get_clock().now().to_msg()
-        msg.header.frame_id         = 'odom'
-        msg.child_frame_id          = 'base_footprint'
-        msg.pose.pose.position.x    = self.x
-        msg.pose.pose.position.y    = self.y
-        msg.pose.pose.orientation.x = float(q[0])
-        msg.pose.pose.orientation.y = float(q[1])
-        msg.pose.pose.orientation.z = float(q[2])
-        msg.pose.pose.orientation.w = float(q[3])
-        msg.twist.twist.linear.x    = v
-        msg.twist.twist.angular.z   = w
+        odom = Odometry()
+        odom.header.stamp            = self.get_clock().now().to_msg()
+        odom.header.frame_id         = 'odom'
+        odom.child_frame_id          = 'base_footprint'
+        odom.pose.pose.position.x    = self.x
+        odom.pose.pose.position.y    = self.y
+        odom.pose.pose.orientation.x = float(q[0])
+        odom.pose.pose.orientation.y = float(q[1])
+        odom.pose.pose.orientation.z = float(q[2])
+        odom.pose.pose.orientation.w = float(q[3])
+        odom.twist.twist.linear.x    = v
+        odom.twist.twist.angular.z   = w
 
-        self._odom_pub.publish(msg)
+        self._odom_pub.publish(odom)
 
 
 def main(args=None):

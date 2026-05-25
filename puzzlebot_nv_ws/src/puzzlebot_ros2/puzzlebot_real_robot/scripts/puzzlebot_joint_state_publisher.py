@@ -10,6 +10,7 @@ Publishes:
   TF: odom -> base_footprint
 """
 import rclpy
+import math
 from rclpy.node import Node
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import JointState
@@ -20,13 +21,6 @@ from tf2_ros import TransformBroadcaster
 class PuzzlebotJointStatePublisher(Node):
     """Publish joint states and odom->base_footprint TF from odometry."""
 
-    # Must match wheels.xacro defaults and puzzlebot_localization.py
-    WHEEL_RADIUS     = 0.033  # m
-    WHEEL_SEPARATION = 0.16   # m
-
-    # Must match joint names in wheels.xacro
-    JOINT_NAMES = ['left_wheel_joint', 'right_wheel_joint']
-
     def __init__(self):
         super().__init__('puzzlebot_joint_state_publisher')
 
@@ -34,31 +28,30 @@ class PuzzlebotJointStatePublisher(Node):
         self._angle_l = 0.0
         self._angle_r = 0.0
 
+        # Robot parameters (must match physical robot)
+        self.r = 0.05  # Wheel radius (m)
+        self.l = 0.19  # Wheel separation (m)
+
         # Current robot velocities from odometry
         self._v = 0.0
         self._w = 0.0
 
-        # Latest odometry message for TF broadcast
-        self._last_odom: Odometry | None = None
-
         # Subscription
-        self.create_subscription(Odometry, '/odom', self._cb_odom, 10)
+        self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
 
         # Publishers
-        self._joint_pub = self.create_publisher(JointState, '/joint_states', 10)
-        self._tf_broadcaster = TransformBroadcaster(self)
+        self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
+        self.tf_broadcaster = TransformBroadcaster(self)
 
         # Timer at 100 Hz
         self._dt = 0.01
         self.create_timer(self._dt, self._publish)
 
-        self.get_logger().info('puzzlebot_joint_state_publisher started — '
-                               'joints: %s' % self.JOINT_NAMES)
+        self.get_logger().info('puzzlebot_joint_state_publisher started')
 
-    def _cb_odom(self, msg: Odometry):
+    def odom_callback(self, msg):
         self._v = msg.twist.twist.linear.x
         self._w = msg.twist.twist.angular.z
-        self._last_odom = msg
 
         # Broadcast odom -> base_footprint TF immediately on each odom message
         t = TransformStamped()
@@ -69,15 +62,12 @@ class PuzzlebotJointStatePublisher(Node):
         t.transform.translation.y = msg.pose.pose.position.y
         t.transform.translation.z = 0.0
         t.transform.rotation      = msg.pose.pose.orientation
-        self._tf_broadcaster.sendTransform(t)
+        self.tf_broadcaster.sendTransform(t)
 
     def _publish(self):
-        r = self.WHEEL_RADIUS
-        l = self.WHEEL_SEPARATION
-
         # Inverse kinematics: robot v,w -> wheel angular velocities
-        wr = (self._v + self._w * l / 2.0) / r
-        wl = (self._v - self._w * l / 2.0) / r
+        wr = (self._v + self._w * self.l / 2.0) / self.r
+        wl = (self._v - self._w * self.l / 2.0) / self.r
 
         # Integrate wheel angles
         self._angle_l += wl * self._dt
@@ -85,9 +75,9 @@ class PuzzlebotJointStatePublisher(Node):
 
         js = JointState()
         js.header.stamp = self.get_clock().now().to_msg()
-        js.name         = self.JOINT_NAMES
+        js.name         = ['wheel_left_joint', 'wheel_right_joint']
         js.position     = [self._angle_l, self._angle_r]
-        self._joint_pub.publish(js)
+        self.joint_pub.publish(js)
 
 
 def main(args=None):
