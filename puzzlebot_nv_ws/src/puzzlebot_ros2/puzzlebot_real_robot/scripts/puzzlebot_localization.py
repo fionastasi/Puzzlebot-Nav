@@ -11,7 +11,6 @@ Publishes:
 """
 import math
 import numpy as np
-import math
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
@@ -26,7 +25,7 @@ def quaternion_from_euler(roll: float, pitch: float, yaw: float) -> np.ndarray:
     cr, sr = math.cos(roll),  math.sin(roll)
     cp, sp = math.cos(pitch), math.sin(pitch)
     cy, sy = math.cos(yaw),   math.sin(yaw)
-    q = np.empty((4,0))
+    q = np.empty(4)
     q[0] = cp * sr * cy - sp * cr * sy  # x
     q[1] = cp * cr * sy + sp * sr * cy  # y
     q[2] = cp * sr * sy - sp * cr * cy  # z 
