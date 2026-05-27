@@ -27,8 +27,8 @@ def quaternion_from_euler(roll: float, pitch: float, yaw: float) -> np.ndarray:
     cy, sy = math.cos(yaw),   math.sin(yaw)
     q = np.empty(4)
     q[0] = cp * sr * cy - sp * cr * sy  # x
-    q[1] = cp * cr * sy + sp * sr * cy  # y
-    q[2] = cp * sr * sy - sp * cr * cy  # z 
+    q[1] = cr * sp * cy + sr * cp * sy
+    q[2] = cr * cp * sy - sr * sp * cy
     q[3] = cp * cr * cy + sp * sr * sy  # w
     return q
 
