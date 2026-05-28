@@ -113,7 +113,7 @@ controller_server:
       allow_reversing: false
       max_robot_pose_search_dist: 10.0
       interpolate_curvature_after_goal: false
-    enable_stamped_cmd_vel: true
+    enable_stamped_cmd_vel: false
 
 local_costmap:
   local_costmap:
