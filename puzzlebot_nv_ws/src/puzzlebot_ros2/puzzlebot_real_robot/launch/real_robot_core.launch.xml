@@ -14,7 +14,7 @@
 
   <!-- RPLidar A1 — publishes /scan -->
   <include file="$(find-pkg-share rplidar_ros)/launch/rplidar_a1_launch.py">
-    <arg name="serial_port" value="/dev/ttyUSB1" /> <!-- Replace with actual port -->
+    <arg name="serial_port" value="/dev/rplidar" />
     <arg name="frame_id" value="laser_frame" />
   </include>
 
