@@ -24,14 +24,14 @@
     <visual>
       <origin xyz="0 0.052 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
       </geometry>
       <material name="red" />
     </visual>
     <collision>
       <origin xyz="0 0.052 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
       </geometry>
     </collision>
   </link>
@@ -55,14 +55,14 @@
     <visual>
       <origin xyz="0 0 0" rpy="-1.5708 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
       </geometry>
       <material name="red" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="-1.5708 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
       </geometry>
     </collision>
   </link> 
@@ -90,14 +90,14 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
       </geometry>
       <material name="red" />
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="1.5708 0 0" />
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Wheel.stl" scale="1 1 1"/>
       </geometry>
     </collision>
   </link>
@@ -124,13 +124,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
       </geometry>
       <material name="red" />
     </visual>
     <collision>
       <geometry>
-        <mesh filename="file://$(find puzzlebot_description)/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
+        <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Caster_Wheel.stl" scale="1 1 1"/>
       </geometry>
     </collision>
   </link>

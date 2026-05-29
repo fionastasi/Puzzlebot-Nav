@@ -4,7 +4,7 @@
   <arg name="nav2_params_file"
        default="$(find-pkg-share puzzlebot_real_robot)/config/nav2_params_real.yaml" />
   <arg name="rviz_config_file"
-       default="$(find-pkg-share puzzlebot_navigation2)/rviz/nav2.rviz" />
+       default="$(find-pkg-share puzzlebot_real_robot)/rviz/nav2.rviz" />
   <arg name="autostart" default="true" />
 
   <!-- Publish the robot's URDF to the ROS parameter server -->

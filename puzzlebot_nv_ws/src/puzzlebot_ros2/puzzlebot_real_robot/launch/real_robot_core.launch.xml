@@ -32,8 +32,9 @@
         output="screen" />
 
   <!-- TF fix: connect laser_frame (URDF) with laser -->
-  <node pkg="tf2_ros" exec="static_transform_publisher"
+  <!-- The URDF already defines laser_frame, so this static transform is unnecessary and can conflict with TF from robot_state_publisher. -->
+  <!--<node pkg="tf2_ros" exec="static_transform_publisher"
         name="laser_tf_fix"
-        args="0 0 0 0 0 0 laser_frame laser" />
+        args="0 0 0 0 0 0 laser_frame laser" />-->
 
 </launch> 
