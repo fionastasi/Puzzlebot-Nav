@@ -24,14 +24,14 @@
       <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
     </inertial>
     <visual>
-      <origin xyz="0 0.052 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
       </geometry>
       <material name="red" />
     </visual>
     <collision>
-      <origin xyz="0 0.052 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://puzzlebot_description/meshes/Puzzlebot_Jetson_Lidar_Edition_Base.stl" scale="1 1 1"/>
       </geometry>
@@ -41,7 +41,7 @@
   <joint name="base_link_joint" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
-    <origin xyz="0.052 0 0.05" />
+    <origin xyz="0 0 0.05" />
   </joint>
 
   <gazebo reference="base_link">
@@ -72,7 +72,7 @@
   <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link" />
     <child link="right_wheel_link" />
-    <origin xyz="0 -0.095 -0.0025"/>
+    <origin xyz="0.025 -0.095 -0.0025"/>
     <axis xyz="0 1 0" />
   </joint>
 
@@ -107,7 +107,7 @@
   <joint name="left_wheel_joint" type="continuous">
     <parent link="base_link" />
     <child link="left_wheel_link" />
-    <origin xyz="0 0.095 -0.0025"/>
+    <origin xyz="0.025 0.095 -0.0025"/>
     <axis xyz="0 1 0" />
   </joint>
 
@@ -140,7 +140,7 @@
   <joint name="caster_joint" type="fixed">
     <parent link="base_link" />
     <child link="caster_link" />
-    <origin xyz="-0.147 0 -0.043"/>
+    <origin xyz="-0.110 0 -0.043"/>
   </joint>
 
   <gazebo reference="caster_link">
@@ -150,6 +150,6 @@
   </gazebo>
 
   <xacro:puzzlebot_control prefix="$(arg prefix)" />
-  <xacro:puzzlebot_sensors prefix="$(arg prefix)" />
+  <xacro:puzzlebot_sensors prefix="$(arg prefix)" lidar_base_pos_x="0.06" />
 
 </robot>
